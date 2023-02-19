@@ -39,9 +39,13 @@ features                                  :
     description                           : All the information you'll need in one application.
     fontawesome_icon_name                 : book-open-cover
     
-  - title                                 : Step-by-Step Easy Progress
-    description                           : The app also includes a checklist to make sure you will not miss any of the important point.
+  - title                                 : Step-by-Step Progress
+    description                           : The app includes a checklist approach to make sure you will not miss any of the important point.
     fontawesome_icon_name                 : list-check
+
+  - title                                 : Customized Content Based on Your Profile
+    description                           : Whether you're moving for work, study, or for a new adventure, "Moving to Ireland" is the perfect companion to help you prepare for our move and make the most of vour new life in Ireland.
+    fontawesome_icon_name                 : user  
 
   - title                                 : # New Feature Title
     description                           : # New Feature Description
