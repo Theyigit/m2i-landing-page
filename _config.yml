@@ -37,11 +37,11 @@ features                                  :
 
   - title                                 : Detailed Content
     description                           : All the information you'll need in one application.
-    fontawesome_icon_name                 : fa-book-open-cover
+    fontawesome_icon_name                 : book
     
   - title                                 : Step-by-Step Progress
     description                           : The app includes a checklist approach to make sure you will not miss any of the important point.
-    fontawesome_icon_name                 : fa-solid fa-list-check
+    fontawesome_icon_name                 : list
 
   - title                                 : Customized Content Based on Your Profile
     description                           : Whether you're moving for work, study, or for a new adventure, "Moving to Ireland" is the perfect companion to help you prepare for our move and make the most of vour new life in Ireland.
