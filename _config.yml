@@ -41,11 +41,23 @@ features                                  :
     
   - title                                 : Step-by-Step Progress
     description                           : The app includes a checklist approach to make sure you will not miss any of the important point.
-    fontawesome_icon_name                 : list
+    fontawesome_icon_name                 : circle-check
 
   - title                                 : Customized Content Based on Your Profile
-    description                           : Whether you're moving for work, study, or for a new adventure, "Moving to Ireland" is the perfect companion to help you prepare for our move and make the most of vour new life in Ireland.
+    description                           : Whether you're moving for work, study, or for a new adventure, “Moving to Ireland” is the perfect companion to help you prepare for our move and make the most of your new life in Ireland.
     fontawesome_icon_name                 : user  
+
+  - title                                 : Pre-move / Post-move
+    description                           : You will find a special section, even if you're not arrived in Ireland yet.
+    fontawesome_icon_name                 : suitcase  
+
+  - title                                 : Tailored Roadmap For Your Passport 
+    description                           : Each citizenship has its journey while relocating. “Moving to Ireland” will guide on your way.
+    fontawesome_icon_name                 : globe  
+
+  - title                                 : Build your team
+    description                           : “Moving to Ireland” provides all the required information not just yourself, but also for your spouse, kid(s) and even for pet(s).
+    fontawesome_icon_name                 : family              
 
   - title                                 : # New Feature Title
     description                           : # New Feature Description
