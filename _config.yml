@@ -35,15 +35,15 @@ youtube_username                          :
 # Feature List                            Edit, add or remove features to be presented.
 features                                  :
 
-  - title                                 : Detailed Content
+  - title                                 : Detailed content
     description                           : All the information you'll need in one application.
     fontawesome_icon_name                 : book
     
-  - title                                 : Step-by-Step Progress
+  - title                                 : Step-by-step progress
     description                           : The app includes a checklist approach to make sure you will not miss any of the important point.
     fontawesome_icon_name                 : circle-check
 
-  - title                                 : Customized Content Based on Your Profile
+  - title                                 : Customized content based on your profile
     description                           : Whether you're moving for work, study, or for a new adventure, “Moving to Ireland” is the perfect companion to help you prepare for our move and make the most of your new life in Ireland.
     fontawesome_icon_name                 : user  
 
@@ -51,7 +51,7 @@ features                                  :
     description                           : You will find a special section, even if you're not arrived in Ireland yet.
     fontawesome_icon_name                 : suitcase  
 
-  - title                                 : Tailored Roadmap For Your Passport 
+  - title                                 : Tailored roadmap for your passport 
     description                           : Each citizenship has its journey while relocating. “Moving to Ireland” will guide on your way.
     fontawesome_icon_name                 : globe  
 
