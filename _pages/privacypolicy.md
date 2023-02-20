@@ -7,7 +7,7 @@ include_in_header: false
 **Last updated**  
 February 20 2023
 
-#**Privacy Policy**
+**Privacy Policy**
 
 Yigit Yilmaz built the Moving to Ireland app as a Freemium app. This SERVICE is provided by Yigit Yilmaz at no cost and is intended for use as is.
 
