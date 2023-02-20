@@ -35,15 +35,15 @@ youtube_username                          :
 # Feature List                            Edit, add or remove features to be presented.
 features                                  :
 
-  - title                                 : Detailed content
-    description                           : All the information you'll need in one application.
+  - title                                 : Comprehensive content
+    description                           : “Moving to Ireland” app has 170 book pages long content. All the information you'll need in one application.
     fontawesome_icon_name                 : book
     
   - title                                 : Step-by-step progress
     description                           : The app includes a checklist approach to make sure you will not miss any of the important point.
     fontawesome_icon_name                 : check
 
-  - title                                 : Customized content based on your profile
+  - title                                 : Personalized flow based on your profile
     description                           : Whether you're moving for work, study, or for a new adventure, “Moving to Ireland” is the perfect companion to help you prepare for our move and make the most of your new life in Ireland.
     fontawesome_icon_name                 : user  
 
