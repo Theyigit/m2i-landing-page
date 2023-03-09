@@ -1,5 +1,5 @@
 #page title
-page_title                                : Moving to Ireland: Expat Guide            # Automatically populates with app name if not set and if iOS app ID is set. Otherwise enter manually.
+page_title                                :                                           # Automatically populates with app name if not set and if iOS app ID is set. Otherwise enter manually.
 
 # App Info
 ios_app_id                                : 6446055261                                # Required. Enter iOS app ID to automatically populate name, price and icons (e.g. 718043190).
@@ -35,13 +35,13 @@ youtube_username                          :
 # Feature List                            Edit, add or remove features to be presented.
 features                                  :
 
-  - title                                 : Comprehensive content
-    description                           : “Moving to Ireland” app has 170 book pages long content. All the information you'll need in one application.
-    fontawesome_icon_name                 : book
-    
   - title                                 : Step-by-step progress
     description                           : The app includes a checklist approach to make sure you will not miss any of the important point.
     fontawesome_icon_name                 : check
+  
+  - title                                 : Comprehensive content
+    description                           : “Moving to Ireland” app has 170 book pages long content. All the information you'll need in one application.
+    fontawesome_icon_name                 : book
 
   - title                                 : Personalized flow based on your profile
     description                           : Whether you're moving for work, study, or for a new adventure, “Moving to Ireland” is the perfect companion to make the most of your new life in Ireland.
