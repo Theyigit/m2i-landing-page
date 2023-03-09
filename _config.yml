@@ -18,7 +18,7 @@ app_description                           : |
                                             Our app provides info on housing, schools, healthcare & more. 
                                             Download now!
 
-enable_smart_app_banner                   : true                                      # Set to true to show a smart app banner at top of page on mobile devices.
+enable_smart_app_banner                   : false                                      # Set to true to show a smart app banner at top of page on mobile devices.
 
 
 
