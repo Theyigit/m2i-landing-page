@@ -201,33 +201,54 @@ h2 {
   user-select: none;
 }
 
-/* Phone bezel for the hero video, matching the App Store screenshot frames:
-   dark rounded body, thin bezel, dynamic island. */
-.phone-frame {
+/* iPhone 15 Pro style frame for the hero video: titanium rail, black bezel,
+   side buttons. The video itself carries the status bar and dynamic island,
+   so the frame draws neither. */
+.iphone {
   position: relative;
   width: 100%;
-  max-width: 300px;
-  padding: 14px;
-  border-radius: 46px;
-  background: #18181a;
-  box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.25);
+  max-width: 290px;
+  padding: 11px;
+  border-radius: 52px;
+  background: #0b0b0d;
+  box-shadow:
+    0 0 0 2.5px #8a8a8f,
+    0 0 0 3.5px #3a3a3e,
+    inset 0 0 0 1px #2a2a2e,
+    0 30px 60px -10px rgba(0, 0, 0, 0.55);
 }
-.phone-screen {
+.iphone::before,
+.iphone::after {
+  content: '';
+  position: absolute;
+  width: 3px;
+  border-radius: 2px;
+  background: #7c7c81;
+}
+/* Action button, volume up and volume down on the left rail. */
+.iphone::before {
+  left: -6.5px;
+  top: 110px;
+  height: 28px;
+  box-shadow:
+    0 62px 0 0 #7c7c81,
+    0 130px 0 0 #7c7c81;
+}
+/* Side (power) button on the right rail. */
+.iphone::after {
+  right: -6.5px;
+  top: 190px;
+  height: 84px;
+}
+.iphone-screen {
+  overflow: hidden;
+  border-radius: 42px;
+  background: #fff;
+  aspect-ratio: 540 / 1170;
+}
+.iphone-screen video {
   display: block;
   width: 100%;
-  height: auto;
-  aspect-ratio: 540 / 1170;
-  border-radius: 34px;
-  background: #fff;
+  height: 100%;
   object-fit: cover;
-}
-.phone-island {
-  position: absolute;
-  top: 26px;
-  left: 50%;
-  width: 84px;
-  height: 24px;
-  transform: translateX(-50%);
-  border-radius: 12px;
-  background: #000;
 }

@@ -121,9 +121,9 @@ const structuredData = {
   <script slot="head" type="application/ld+json" is:inline set:html={JSON.stringify(structuredData)} />
 
   <!-- Hero -->
-  <div class="hero-band px-4 pb-0 pt-12 sm:px-6">
-    <div class="mx-auto grid max-w-[1040px] items-end gap-8 md:grid-cols-[1.2fr_1fr]">
-      <div class="pb-12">
+  <div class="hero-band px-4 py-12 sm:px-6">
+    <div class="mx-auto grid max-w-[1040px] items-center gap-10 md:grid-cols-[1.2fr_1fr]">
+      <div>
         <p class="mb-2 text-[12px] font-extrabold uppercase tracking-[0.08em] text-accent-light">
           Expat guide · iPhone & iPad
         </p>
@@ -150,24 +150,24 @@ const structuredData = {
         </p>
       </div>
       <div class="hidden justify-self-center md:block">
-        <!-- The App Store preview video inside a phone bezel. The video only
+        <!-- The App Store preview video inside an iPhone frame. The video only
              loads on wide viewports (the column is hidden below md) and never
              when the user prefers reduced motion; the poster shows otherwise. -->
-        <div class="phone-frame" style="clip-path: inset(0 0 22% 0); margin-bottom: -22%">
-          <video
-            id="hero-video"
-            class="phone-screen"
-            poster="/images/app-preview-poster.webp"
-            width="540"
-            height="1170"
-            muted
-            loop
-            playsinline
-            preload="none"
-            aria-label="Preview of the Moving to Ireland app: choosing your profile and working through the relocation checklist"
-            data-src="/images/app-preview.mp4"
-          ></video>
-          <span class="phone-island" aria-hidden="true"></span>
+        <div class="iphone">
+          <div class="iphone-screen">
+            <video
+              id="hero-video"
+              poster="/images/app-preview-poster.webp"
+              width="540"
+              height="1170"
+              muted
+              loop
+              playsinline
+              preload="none"
+              aria-label="Preview of the Moving to Ireland app: choosing your profile and working through the relocation checklist"
+              data-src="/images/app-preview.mp4"
+            ></video>
+          </div>
         </div>
       </div>
     </div>
