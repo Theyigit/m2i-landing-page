@@ -42,9 +42,9 @@ def favicons() -> None:
 
 def screenshot() -> None:
     src = Image.open(IMG / "home-screen.png").convert("RGB")
-    w = 720
+    w = 560
     src = src.resize((w, int(src.height * w / src.width)), Image.LANCZOS)
-    src.save(IMG / "home-screen.webp", "WEBP", quality=82, method=6)
+    src.save(IMG / "home-screen.webp", "WEBP", quality=78, method=6)
 
 
 def og_card() -> None:

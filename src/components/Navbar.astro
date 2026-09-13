@@ -6,7 +6,7 @@ const isActive = (href: string) =>
   href === '/guides/' ? path === '/guides/' : path.startsWith(href);
 ---
 
-<header class="sticky top-0 z-50 bg-brand">
+<header class="sticky top-0 z-50 bg-brand-dark">
   <nav
     class="mx-auto flex min-h-[56px] max-w-[1040px] items-center justify-between gap-2 px-3 sm:px-6"
     aria-label="Primary"
@@ -21,7 +21,7 @@ const isActive = (href: string) =>
         decoding="async"
       />
       <span class="truncate text-[12px] font-extrabold uppercase tracking-[0.03em] text-white sm:text-[15px]">
-        Moving to <span class="text-accent">Ireland</span>
+        Moving to <span class="text-accent-light">Ireland</span>
       </span>
     </a>
 
@@ -45,7 +45,7 @@ const isActive = (href: string) =>
         target="_blank"
         rel="noopener"
         data-placement="navbar"
-        class="ml-1 inline-flex min-h-[40px] items-center rounded-[10px] bg-accent px-3 text-[11px] font-extrabold uppercase tracking-[0.04em] text-white no-underline transition hover:bg-accent-dark sm:text-[12px]"
+        class="ml-1 inline-flex min-h-[40px] items-center rounded-[10px] bg-accent px-3 text-[11px] font-extrabold uppercase tracking-[0.04em] text-ink no-underline transition hover:bg-accent-light sm:text-[12px]"
       >
         Get the App
       </a>
