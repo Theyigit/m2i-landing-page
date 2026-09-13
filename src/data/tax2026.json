@@ -1,0 +1,70 @@
+{
+  "taxYear": 2026,
+  "sources": [
+    "https://www.revenue.ie/en/personal-tax-credits-reliefs-and-exemptions/tax-relief-charts/index.aspx",
+    "https://kpmg.com/ie/en/insights/tax/budget-2026/tables.html",
+    "https://www.citizensinformation.ie/en/money-and-tax/tax/income-tax/universal-social-charge/",
+    "https://www.citizensinformation.ie/en/social-welfare/irish-social-welfare-system/social-insurance-prsi/paying-social-insurance/",
+    "https://assets.gov.ie/static/documents/b9146265/20251008_Advance_Notice_2026_Final.pdf",
+    "https://www.revenue.ie/en/personal-tax-credits-reliefs-and-exemptions/land-and-property/rent-credit/index.aspx",
+    "https://www.citizensinformation.ie/en/employment/employment-rights-and-conditions/pay-and-employment/minimum-wage/"
+  ],
+  "incomeTax": {
+    "standardRate": 0.20,
+    "higherRate": 0.40,
+    "bands": {
+      "single": 44000,
+      "marriedOneIncome": 53000,
+      "marriedTwoIncomes": 88000,
+      "marriedTwoIncomesMaxPerPerson": 44000,
+      "singleParent": 48000
+    }
+  },
+  "credits": {
+    "personalSingle": 2000,
+    "personalMarried": 4000,
+    "employee": 2000,
+    "earnedIncome": 2000,
+    "singlePersonChildCarer": 1900,
+    "homeCarer": 1950,
+    "rentTaxCredit": 1000,
+    "rentTaxCreditCouple": 2000
+  },
+  "usc": {
+    "exemptionThreshold": 13000,
+    "bands": [
+      { "upTo": 12012, "rate": 0.005 },
+      { "upTo": 28700, "rate": 0.02 },
+      { "upTo": 70044, "rate": 0.03 },
+      { "upTo": null, "rate": 0.08 }
+    ],
+    "reducedRateOver70OrMedicalCardIncomeLimit": 60000,
+    "reducedRateMaxRate": 0.02,
+    "selfEmployedSurchargeThreshold": 100000,
+    "selfEmployedSurchargeRate": 0.03
+  },
+  "prsi": {
+    "class": "A1",
+    "employeeRate": 0.042,
+    "employeeRates": [
+      { "from": "2026-01-01", "to": "2026-09-30", "rate": 0.042 },
+      { "from": "2026-10-01", "to": "2026-12-31", "rate": 0.0435 }
+    ],
+    "weeklyExemptionThreshold": 352,
+    "weeklyTaperCredit": 12,
+    "weeklyTaperCreditUpperLimit": 424,
+    "weeklyTaperCreditReductionPerEuro": 0.16667,
+    "employerRate": 0.1125,
+    "employerRateFrom2026-10-01": 0.114,
+    "employerLowerRateFrom2026-10-01": 0.0915,
+    "employerLowerRate": 0.09,
+    "employerLowerRateWeeklyThreshold": 552
+  },
+  "minimumWage": {
+    "from": "2026-01-01",
+    "adultHourly": 14.15,
+    "age19Hourly": 12.74,
+    "age18Hourly": 11.32,
+    "under18Hourly": 9.91
+  }
+}

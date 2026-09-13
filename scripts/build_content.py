@@ -8,9 +8,11 @@ names, so this script parses each file into a small tree, keeps only the
 semantic structure (headings, paragraphs, lists, links, bold, tables) and
 rewrites it as clean HTML.
 
-Only the opening PREVIEW_SHARE of each article is written to the JSON. The
-rest of the article is never emitted, so the built site cannot leak it: the
-"read the rest in the app" panel is a real gate, not a CSS one.
+The opening PREVIEW_SHARE of each article is `previewHtml`; the remainder is
+`gatedHtml`. The site renders both, with the remainder inside a gated section
+marked up with schema.org paywall structured data, so search engines and AI
+crawlers index the full text while readers see the "keep reading in the app"
+panel.
 
 Run with `npm run content:build` whenever the app's content changes. Stdlib only.
 """
@@ -297,7 +299,7 @@ def description_from(blocks, limit=155) -> str:
 
 def slugify(stem: str) -> str:
     s = re.sub(r"^\d+-", "", stem)
-    s = s.replace(".", "").replace("_", "-").lower()
+    s = s.replace(".", "").replace("_", "-").replace(" ", "-").lower()
     s = re.sub(r"-+", "-", s).strip("-")
     return s
 
@@ -360,6 +362,8 @@ def main() -> None:
                     "previewWordCount": preview_words,
                     "previewShare": round(preview_words / words, 3),
                     "previewHtml": "\n".join(b[1] for b in preview),
+                    "gatedHtml": "\n".join(b[1] for b in blocks[len(preview):]),
+                    "plainText": "\n\n".join(b[2].strip() for b in blocks if b[2].strip()),
                     "sections": upcoming,
                 }
             )

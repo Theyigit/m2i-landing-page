@@ -11,7 +11,7 @@ content pages rank, every page funnels to the App Store.
 
 ## How the funnel works
 
-The app bundles 55 guides (about 21,000 words) across 8 categories. The site
+The app bundles 99 guides (about 59,000 words) across 14 categories. The site
 publishes the **opening ~20% of every guide** as its own page, then a Medium-style
 gate: the last visible paragraph fades out under a "keep reading in the app" panel
 listing the sections still to come. Only the preview is ever emitted — the rest of
@@ -22,8 +22,14 @@ each article never reaches the build output, so there is nothing to un-hide.
 /guides/                           every guide grouped by category
 /guides/<category>/                category hub, guides in the app's step order
 /guides/<category>/<slug>/         guide preview + gate + neighbours + app CTA
+/tools/take-home-pay-calculator/   2026 income tax, USC and PRSI calculator (src/data/tax2026.json)
+/llms.txt  /llms-full.txt          index and full text of every guide for AI assistants
 /privacy/  /terms/                 legal (old /privacypolicy and /termsofservice redirect here)
 ```
+
+The full text of every guide is in the page HTML (the part after the preview
+sits in a hidden `.gated` section declared with schema.org paywall markup), so
+search engines and AI crawlers index whole articles while readers see the gate.
 
 ## Content pipeline
 
@@ -56,6 +62,12 @@ npm install
 npm run dev       # http://localhost:4321
 npm run build     # → dist/
 ```
+
+## Getting new pages indexed
+
+`python3 scripts/indexnow.py` pushes every sitemap URL to IndexNow (Bing and
+partners). Google only takes the sitemap: resubmit it in Search Console after a
+content release. The IndexNow key file lives in `public/` and `scripts/indexnow.key`.
 
 ## Deploy
 

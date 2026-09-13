@@ -31,9 +31,10 @@ export const SOCIAL = {
 
 export const NAV = [
   { href: '/guides/', label: 'Guides' },
+  { href: '/guides/cost-of-living/', label: 'Cost of living' },
+  { href: '/guides/visas-and-permits/', label: 'Visas' },
   { href: '/guides/accommodation/', label: 'Housing' },
-  { href: '/guides/paperwork/', label: 'Paperwork' },
-  { href: '/guides/healthcare/', label: 'Healthcare' },
+  { href: '/tools/take-home-pay-calculator/', label: 'Pay calculator' },
 ];
 
 /** What the app offers beyond the articles — the reason to tap through. */

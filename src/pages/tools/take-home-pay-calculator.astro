@@ -1,0 +1,195 @@
+---
+import Base from '../../layouts/Base.astro';
+import AppCTA from '../../components/AppCTA.astro';
+import tax from '../../data/tax2026.json' with { type: 'json' };
+import { SITE_NAME, SITE_URL } from '../../lib/site';
+import { breadcrumbs } from '../../lib/schema';
+
+const title = `Ireland take-home pay calculator ${tax.taxYear} | ${SITE_NAME}`;
+const description = `Work out your net salary in Ireland for ${tax.taxYear}: income tax, USC and PRSI on any gross salary, single or married, with the rent tax credit. Uses the Budget ${tax.taxYear} bands and credits.`;
+
+const faqs = [
+  {
+    q: 'How is take-home pay calculated in Ireland?',
+    a: `Gross pay is taxed at ${tax.incomeTax.standardRate * 100}% up to your standard rate band (€${tax.incomeTax.bands.single.toLocaleString()} for a single person in ${tax.taxYear}) and ${tax.incomeTax.higherRate * 100}% above it. Tax credits (personal €${tax.credits.personalSingle.toLocaleString()} and employee €${tax.credits.employee.toLocaleString()}) are subtracted from the tax. USC is charged separately in bands from 0.5% to 8%, and PRSI is ${tax.prsi.employeeRate * 100}% of gross pay above €${tax.prsi.weeklyExemptionThreshold} a week.`,
+  },
+  {
+    q: 'What is the standard rate cut-off point in 2026?',
+    a: `€${tax.incomeTax.bands.single.toLocaleString()} for a single person, €${tax.incomeTax.bands.marriedOneIncome.toLocaleString()} for a married couple with one income and up to €${tax.incomeTax.bands.marriedTwoIncomes.toLocaleString()} for a couple with two incomes.`,
+  },
+  {
+    q: 'Do I pay USC on all my income?',
+    a: `If you earn €${tax.usc.exemptionThreshold.toLocaleString()} or less in a year you pay no USC at all. Above that, all of your income is charged in bands: 0.5% on the first €${tax.usc.bands[0].upTo!.toLocaleString()}, 2% up to €${tax.usc.bands[1].upTo!.toLocaleString()}, 3% up to €${tax.usc.bands[2].upTo!.toLocaleString()} and 8% on the rest.`,
+  },
+  {
+    q: 'What does the PRSI rate change in October 2026 mean?',
+    a: `Employee PRSI is ${tax.prsi.employeeRates[0].rate * 100}% from January and rises to ${tax.prsi.employeeRates[1].rate * 100}% from 1 October ${tax.taxYear}. The calculator lets you pick either rate; over a full year the difference is small.`,
+  },
+];
+
+const structuredData = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'WebApplication',
+      '@id': `${SITE_URL}/tools/take-home-pay-calculator/#app`,
+      name: `Ireland take-home pay calculator ${tax.taxYear}`,
+      description,
+      url: `${SITE_URL}/tools/take-home-pay-calculator/`,
+      applicationCategory: 'FinanceApplication',
+      operatingSystem: 'Any',
+      browserRequirements: 'Requires JavaScript',
+      offers: { '@type': 'Offer', price: '0', priceCurrency: 'EUR' },
+    },
+    breadcrumbs([{ name: 'Tools', path: '/tools/take-home-pay-calculator/' }, { name: 'Take-home pay calculator' }]),
+    {
+      '@type': 'FAQPage',
+      mainEntity: faqs.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
+    },
+  ],
+};
+---
+
+<Base title={title} description={description}>
+  <script slot="head" type="application/ld+json" is:inline set:html={JSON.stringify(structuredData)} />
+
+  <div class="hero-band px-4 py-10 sm:px-6">
+    <div class="mx-auto max-w-[760px]">
+      <nav aria-label="Breadcrumb" class="mb-3 text-[13px] text-white/70">
+        <a href="/" class="text-white/85 no-underline hover:underline">Home</a>
+        <span class="px-1.5">/</span>
+        <span aria-current="page">Take-home pay calculator</span>
+      </nav>
+      <h1 class="mb-2 text-[clamp(24px,4.4vw,36px)]">Ireland take-home pay calculator {tax.taxYear}</h1>
+      <p class="text-[15px] text-white/85">
+        Enter a gross salary and see what lands in your account after income tax, USC and PRSI,
+        using the Budget {tax.taxYear} bands and credits.
+      </p>
+    </div>
+  </div>
+
+  <section class="mx-auto max-w-[760px] px-4 pt-9 sm:px-6">
+    <form id="calc" class="panel grid gap-4 px-5 py-5 sm:grid-cols-2" onsubmit="return false">
+      <label class="block sm:col-span-2">
+        <span class="mb-1 block text-[13px] font-bold uppercase tracking-[0.05em] text-ink-faint">Gross salary (€ per year)</span>
+        <input id="gross" type="number" inputmode="numeric" min="0" step="100" value="50000" class="hair w-full rounded-[10px] px-4 py-3 text-[18px] font-bold text-ink" />
+      </label>
+      <label class="block">
+        <span class="mb-1 block text-[13px] font-bold uppercase tracking-[0.05em] text-ink-faint">Status</span>
+        <select id="status" class="hair w-full rounded-[10px] bg-white px-4 py-3 text-ink">
+          <option value="single">Single</option>
+          <option value="marriedOne">Married, one income</option>
+          <option value="marriedTwo">Married, two incomes (my share)</option>
+          <option value="singleParent">Single parent</option>
+        </select>
+      </label>
+      <label class="block">
+        <span class="mb-1 block text-[13px] font-bold uppercase tracking-[0.05em] text-ink-faint">PRSI rate</span>
+        <select id="prsi" class="hair w-full rounded-[10px] bg-white px-4 py-3 text-ink">
+          <option value={String(tax.prsi.employeeRates[0].rate)}>{tax.prsi.employeeRates[0].rate * 100}% (January to September {tax.taxYear})</option>
+          <option value={String(tax.prsi.employeeRates[1].rate)}>{tax.prsi.employeeRates[1].rate * 100}% (from 1 October {tax.taxYear})</option>
+        </select>
+      </label>
+      <label class="flex items-center gap-2 sm:col-span-2">
+        <input id="rent" type="checkbox" class="h-5 w-5" />
+        <span class="text-[15px] text-ink">I rent my home (rent tax credit, €{tax.credits.rentTaxCredit.toLocaleString()} single / €{tax.credits.rentTaxCreditCouple.toLocaleString()} couple)</span>
+      </label>
+    </form>
+
+    <div id="out" class="hair hair-top mt-5 rounded-[12px] px-5 py-5" aria-live="polite">
+      <p class="mb-1 text-[12px] font-extrabold uppercase tracking-[0.08em] text-accent-text">Your take-home pay</p>
+      <p class="mb-4 text-[34px] font-extrabold leading-none text-brand-dark"><span id="netMonth">–</span> <span class="text-[16px] font-bold text-ink-soft">per month</span></p>
+      <div class="scroll-x">
+        <table class="w-full text-[15px]">
+          <tbody id="rows"></tbody>
+        </table>
+      </div>
+      <p class="mt-3 text-[13px] text-ink-faint">
+        Estimates for a PAYE employee (PRSI class A), no pension contributions or benefits in kind. Tax year {tax.taxYear}. Sources: Revenue and Citizens Information.
+      </p>
+    </div>
+
+    <script is:inline define:vars={{ tax }}>
+      const eur = (n) => '€' + Math.round(n).toLocaleString('en-IE');
+      const $ = (id) => document.getElementById(id);
+      function calc() {
+        const gross = Math.max(0, Number($('gross').value) || 0);
+        const status = $('status').value;
+        const prsiRate = Number($('prsi').value);
+        const rents = $('rent').checked;
+        const b = tax.incomeTax.bands;
+        const band = status === 'marriedOne' ? b.marriedOneIncome : status === 'marriedTwo' ? b.marriedTwoIncomesMaxPerPerson : status === 'singleParent' ? b.singleParent : b.single;
+        const std = Math.min(gross, band);
+        let incomeTax = std * tax.incomeTax.standardRate + Math.max(0, gross - band) * tax.incomeTax.higherRate;
+        let credits = tax.credits.employee + (status === 'marriedOne' ? tax.credits.personalMarried : tax.credits.personalSingle);
+        if (status === 'singleParent') credits += tax.credits.singlePersonChildCarer;
+        if (rents) credits += status.startsWith('married') ? tax.credits.rentTaxCreditCouple : tax.credits.rentTaxCredit;
+        incomeTax = Math.max(0, incomeTax - credits);
+        let usc = 0;
+        if (gross > tax.usc.exemptionThreshold) {
+          let lower = 0;
+          for (const band of tax.usc.bands) {
+            const upper = band.upTo == null ? Infinity : band.upTo;
+            if (gross > lower) usc += (Math.min(gross, upper) - lower) * band.rate;
+            lower = upper;
+          }
+        }
+        const weekly = gross / 52;
+        let prsi = 0;
+        if (weekly > tax.prsi.weeklyExemptionThreshold) {
+          let credit = 0;
+          if (weekly <= tax.prsi.weeklyTaperCreditUpperLimit) {
+            credit = Math.max(0, tax.prsi.weeklyTaperCredit - (weekly - tax.prsi.weeklyExemptionThreshold) / 6);
+          }
+          prsi = Math.max(0, weekly * prsiRate - credit) * 52;
+        }
+        const net = gross - incomeTax - usc - prsi;
+        $('netMonth').textContent = eur(net / 12);
+        const rows = [
+          ['Gross salary', gross],
+          ['Income tax after credits', -incomeTax],
+          ['USC', -usc],
+          ['PRSI', -prsi],
+          ['Net per year', net],
+          ['Net per month', net / 12],
+          ['Net per week', net / 52],
+          ['Effective tax rate', null, gross ? ((gross - net) / gross * 100).toFixed(1) + '%' : '0%'],
+        ];
+        $('rows').innerHTML = rows.map(([k, v, t]) => `<tr class="border-b border-line"><td class="py-2 pr-3 text-ink-soft">${k}</td><td class="py-2 text-right font-bold text-ink">${t ?? eur(v)}</td></tr>`).join('');
+      }
+      ['gross', 'status', 'prsi', 'rent'].forEach((id) => $(id).addEventListener('input', calc));
+      calc();
+    </script>
+  </section>
+
+  <section class="prose mx-auto max-w-[760px] px-4 pt-10 sm:px-6">
+    <h2>How the {tax.taxYear} numbers work</h2>
+    <p>
+      Income tax is charged at {tax.incomeTax.standardRate * 100}% on income up to your standard rate cut-off point and {tax.incomeTax.higherRate * 100}% on the rest. In {tax.taxYear} the cut-off is <strong>€{tax.incomeTax.bands.single.toLocaleString()}</strong> for a single person, €{tax.incomeTax.bands.marriedOneIncome.toLocaleString()} for a married couple with one income and up to €{tax.incomeTax.bands.marriedTwoIncomes.toLocaleString()} for two incomes. The personal tax credit (€{tax.credits.personalSingle.toLocaleString()}) and the employee credit (€{tax.credits.employee.toLocaleString()}) are taken off the tax bill, not the income.
+    </p>
+    <p>
+      The Universal Social Charge applies once you earn more than €{tax.usc.exemptionThreshold.toLocaleString()} a year, in bands of 0.5%, 2%, 3% and 8%. PRSI for an employee is {tax.prsi.employeeRates[0].rate * 100}% of gross pay from January and {tax.prsi.employeeRates[1].rate * 100}% from 1 October {tax.taxYear}, with nothing due below €{tax.prsi.weeklyExemptionThreshold} a week and a tapering credit up to €{tax.prsi.weeklyTaperCreditUpperLimit}.
+    </p>
+    <p>
+      Read the full explanation in <a href="/guides/work-and-tax/salary-after-tax-in-ireland/">Salary after tax in Ireland</a> and <a href="/guides/work-and-tax/tax-credits-usc-and-prsi-explained/">Tax credits, USC and PRSI explained</a>.
+    </p>
+  </section>
+
+  <section class="mx-auto max-w-[760px] px-4 pt-8 sm:px-6">
+    <h2 class="mb-4 text-[20px] text-brand-dark">Frequently asked</h2>
+    {
+      faqs.map((f) => (
+        <details class="border-b border-line py-1">
+          <summary class="cursor-pointer py-2.5">
+            <h3 class="inline text-[16px] font-bold text-ink">{f.q}</h3>
+          </summary>
+          <p class="mb-3.5 text-[15px] leading-relaxed text-ink-soft">{f.a}</p>
+        </details>
+      ))
+    }
+  </section>
+
+  <section class="mx-auto max-w-[1040px] px-4 pt-10 sm:px-6">
+    <AppCTA topic="work and tax" placement="calculator-cta" />
+  </section>
+</Base>

@@ -3,7 +3,7 @@ import Base from '../../../layouts/Base.astro';
 import AppCTA from '../../../components/AppCTA.astro';
 import Paywall from '../../../components/Paywall.astro';
 import ArticleCard from '../../../components/ArticleCard.astro';
-import { categories, categoryPath, articlePath, generated } from '../../../lib/guides';
+import { categories, categoryPath, articlePath, generated, CATEGORY_TOPIC } from '../../../lib/guides';
 import type { Article, Category } from '../../../lib/guides';
 import { SITE_URL, SITE_NAME, ORG_ID, WEBSITE_ID, APP_STORE_URL } from '../../../lib/site';
 import { breadcrumbs } from '../../../lib/schema';
@@ -41,17 +41,6 @@ const prev = index > 0 ? category.articles[index - 1] : undefined;
 const next = index < category.articles.length - 1 ? category.articles[index + 1] : undefined;
 const related = category.articles.filter((a) => a.slug !== article.slug).slice(0, 4);
 
-const topicWord: Record<string, string> = {
-  'pre-move': 'pre-move',
-  pets: 'pet relocation',
-  paperwork: 'paperwork',
-  accommodation: 'housing',
-  utilities: 'utilities',
-  transportation: 'transport',
-  healthcare: 'healthcare',
-  schooling: 'schooling',
-};
-
 const structuredData = {
   '@context': 'https://schema.org',
   '@graph': [
@@ -62,7 +51,7 @@ const structuredData = {
       description: article.description,
       articleSection: category.name,
       inLanguage: 'en-IE',
-      wordCount: article.previewWordCount,
+      wordCount: article.wordCount,
       author: { '@id': ORG_ID },
       publisher: { '@id': ORG_ID },
       isPartOf: { '@id': WEBSITE_ID },
@@ -70,8 +59,14 @@ const structuredData = {
       datePublished: generated,
       dateModified: generated,
       mainEntityOfPage: pageUrl,
-      // The page is a free excerpt; the full text lives in the app.
-      isAccessibleForFree: true,
+      // Google's paywalled-content markup: the whole article is in the HTML
+      // for indexing, and the part after the preview is declared as gated.
+      isAccessibleForFree: false,
+      hasPart: {
+        '@type': 'WebPageElement',
+        isAccessibleForFree: false,
+        cssSelector: '.gated',
+      },
       workExample: {
         '@type': 'SoftwareApplication',
         name: SITE_NAME,
@@ -122,6 +117,10 @@ const structuredData = {
   <article class="mx-auto max-w-[760px] px-4 pt-9 sm:px-6">
     <div class="prose" set:html={headHtml} />
     {fadeLast && <div class="prose gate-fade" aria-hidden="true" set:html={tailHtml} />}
+    <!-- The rest of the article. Present in the markup so search engines and
+         assistants can read the full guide; hidden from readers, who continue
+         in the app. Declared as paywalled in the Article structured data. -->
+    {article.gatedHtml && <div class="prose gated" hidden set:html={article.gatedHtml} />}
     <Paywall
       title={article.title}
       wordCount={article.wordCount}
@@ -167,6 +166,6 @@ const structuredData = {
   }
 
   <section class="mx-auto max-w-[1040px] px-4 pt-10 sm:px-6">
-    <AppCTA topic={topicWord[category.slug]} placement="article-cta" />
+    <AppCTA topic={CATEGORY_TOPIC[category.slug]} placement="article-cta" />
   </section>
 </Base>

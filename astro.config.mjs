@@ -25,6 +25,9 @@ export default defineConfig({
       serialize(item) {
         const path = new URL(item.url).pathname;
         const priority =
+          path.startsWith('/tools/')
+            ? 0.9
+            :
           path === '/'
             ? 1
             : path === '/guides/'
