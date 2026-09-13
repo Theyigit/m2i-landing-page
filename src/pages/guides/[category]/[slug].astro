@@ -5,7 +5,7 @@ import Paywall from '../../../components/Paywall.astro';
 import ArticleCard from '../../../components/ArticleCard.astro';
 import { categories, categoryPath, articlePath, generated } from '../../../lib/guides';
 import type { Article, Category } from '../../../lib/guides';
-import { SITE_URL, SITE_NAME, AUTHOR, ORG_ID, WEBSITE_ID, APP_STORE_URL } from '../../../lib/site';
+import { SITE_URL, SITE_NAME, ORG_ID, WEBSITE_ID, APP_STORE_URL } from '../../../lib/site';
 import { breadcrumbs } from '../../../lib/schema';
 import { dateLabel } from '../../../lib/format';
 
@@ -63,7 +63,7 @@ const structuredData = {
       articleSection: category.name,
       inLanguage: 'en-IE',
       wordCount: article.previewWordCount,
-      author: { '@type': 'Person', name: AUTHOR, url: `${SITE_URL}/` },
+      author: { '@id': ORG_ID },
       publisher: { '@id': ORG_ID },
       isPartOf: { '@id': WEBSITE_ID },
       image: `${SITE_URL}/images/og-default.png`,
@@ -113,7 +113,7 @@ const structuredData = {
         )
       }
       <p class="mt-2 text-[13px] text-white/65">
-        By {AUTHOR} · {article.readMinutes} min read · Updated{' '}
+        {article.readMinutes} min read · Updated{' '}
         <time datetime={generated}>{dateLabel(generated)}</time>
       </p>
     </div>

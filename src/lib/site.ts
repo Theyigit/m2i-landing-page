@@ -19,10 +19,11 @@ export const APP_RATING = { value: 4.9, count: 11 };
  * Add a GA4 measurement id (G-…) here to get page analytics too. An empty list
  * disables the tag entirely.
  */
-export const GTAG_IDS = ['AW-930149183'];
+export const GTAG_IDS = ['G-WK0QYDDV6X', 'AW-930149183'];
 
 export const CONTACT_EMAIL = 'support@movingtoireland.co';
-export const AUTHOR = 'Yigit Yilmaz';
+/** Legal entity behind the app and the site. */
+export const PUBLISHER = 'Vavien Technology Limited';
 export const SOCIAL = {
   instagram: 'https://instagram.com/movingtoirelandapp',
   twitter: 'https://twitter.com/MovingIreland',

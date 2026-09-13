@@ -81,3 +81,12 @@ if __name__ == "__main__":
     screenshot()
     og_card()
     print("wrote favicon.png, apple-touch-icon.png, images/home-screen.webp, images/og-default.png")
+
+
+# The hero video (public/images/app-preview.mp4) is transcoded by hand from the
+# App Store preview, and its poster is the frame at 8 s (the first seconds are
+# a blue title slide):
+#   ffmpeg -i "M2I-App Preview.mp4" -an -vf "scale=540:-2,fps=30" -c:v libx264 \
+#     -profile:v main -pix_fmt yuv420p -crf 27 -preset slow -movflags +faststart \
+#     public/images/app-preview.mp4
+#   ffmpeg -ss 8 -i public/images/app-preview.mp4 -frames:v 1 poster.jpg  → app-preview-poster.webp

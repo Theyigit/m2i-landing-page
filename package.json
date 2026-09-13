@@ -7,7 +7,7 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "content:build": "python3 scripts/build_content.py && python3 scripts/build_images.py"
+    "content:build": "python3 scripts/build_content.py && python3 scripts/build_images.py && python3 scripts/build_social_proof.py"
   },
   "dependencies": {
     "@astrojs/sitemap": "3.7.2",

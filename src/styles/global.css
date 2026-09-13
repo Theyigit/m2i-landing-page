@@ -200,3 +200,34 @@ h2 {
   pointer-events: none;
   user-select: none;
 }
+
+/* Phone bezel for the hero video, matching the App Store screenshot frames:
+   dark rounded body, thin bezel, dynamic island. */
+.phone-frame {
+  position: relative;
+  width: 100%;
+  max-width: 300px;
+  padding: 14px;
+  border-radius: 46px;
+  background: #18181a;
+  box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.25);
+}
+.phone-screen {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 540 / 1170;
+  border-radius: 34px;
+  background: #fff;
+  object-fit: cover;
+}
+.phone-island {
+  position: absolute;
+  top: 26px;
+  left: 50%;
+  width: 84px;
+  height: 24px;
+  transform: translateX(-50%);
+  border-radius: 12px;
+  background: #000;
+}
