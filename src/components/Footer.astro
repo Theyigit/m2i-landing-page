@@ -1,0 +1,85 @@
+---
+import { APP_STORE_URL, CONTACT_EMAIL, AUTHOR, SOCIAL } from '../lib/site';
+import { categories, categoryPath, generated } from '../lib/guides';
+import { dateLabel } from '../lib/format';
+
+const links = [
+  { href: '/guides/', label: 'All guides' },
+  { href: '/privacy/', label: 'Privacy' },
+  { href: '/terms/', label: 'Terms' },
+];
+const year = new Date().getFullYear();
+---
+
+<footer class="mt-14 bg-brand-dark px-4 pb-10 pt-8 text-white/75 sm:px-6">
+  <div class="mx-auto max-w-[1040px]">
+    <nav class="mb-2 flex flex-wrap gap-x-4" aria-label="Guide categories">
+      {
+        categories.map((c) => (
+          <a
+            href={categoryPath(c)}
+            class="inline-flex min-h-[40px] items-center text-[13px] font-semibold uppercase tracking-[0.05em] text-white no-underline hover:underline"
+          >
+            {c.name}
+          </a>
+        ))
+      }
+    </nav>
+    <nav class="mb-4 flex flex-wrap gap-x-4" aria-label="Footer">
+      {
+        links.map((item) => (
+          <a
+            href={item.href}
+            class="inline-flex min-h-[40px] items-center text-[13px] font-semibold uppercase tracking-[0.05em] text-white/80 no-underline hover:underline"
+          >
+            {item.label}
+          </a>
+        ))
+      }
+      <a
+        href={`mailto:${CONTACT_EMAIL}`}
+        class="inline-flex min-h-[40px] items-center text-[13px] font-semibold uppercase tracking-[0.05em] text-white/80 no-underline hover:underline"
+      >
+        Contact
+      </a>
+      <a
+        href={SOCIAL.instagram}
+        target="_blank"
+        rel="noopener"
+        class="inline-flex min-h-[40px] items-center text-[13px] font-semibold uppercase tracking-[0.05em] text-white/80 no-underline hover:underline"
+      >
+        Instagram
+      </a>
+      <a
+        href={SOCIAL.twitter}
+        target="_blank"
+        rel="noopener"
+        class="inline-flex min-h-[40px] items-center text-[13px] font-semibold uppercase tracking-[0.05em] text-white/80 no-underline hover:underline"
+      >
+        X
+      </a>
+    </nav>
+
+    <div class="flex flex-wrap items-end justify-between gap-5">
+      <div class="max-w-[560px]">
+        <p class="mb-2 text-[13px] leading-relaxed">
+          The guides on this site are excerpts from the Moving to Ireland app. They
+          are general information, not legal or immigration advice; check the
+          linked official sources before you act on a fee, rule or deadline. Guides
+          last refreshed <time datetime={generated}>{dateLabel(generated)}</time>.
+        </p>
+        <p class="text-[12px] text-white/55">&copy; {year} {AUTHOR}</p>
+      </div>
+
+      <a href={APP_STORE_URL} target="_blank" rel="noopener" data-placement="footer" class="shrink-0">
+        <img
+          src="/images/app-store-badge.svg"
+          alt="Download Moving to Ireland on the App Store"
+          width="130"
+          height="43"
+          loading="lazy"
+        />
+      </a>
+    </div>
+  </div>
+</footer>

@@ -1,0 +1,73 @@
+---
+import { APP_STORE_URL, NAV } from '../lib/site';
+
+const path = Astro.url.pathname;
+const isActive = (href: string) =>
+  href === '/guides/' ? path === '/guides/' : path.startsWith(href);
+---
+
+<header class="sticky top-0 z-50 bg-brand">
+  <nav
+    class="mx-auto flex min-h-[56px] max-w-[1040px] items-center justify-between gap-2 px-3 sm:px-6"
+    aria-label="Primary"
+  >
+    <a href="/" class="flex min-w-0 items-center gap-2.5 no-underline">
+      <img
+        src="/favicon.png"
+        alt=""
+        width="28"
+        height="28"
+        class="shrink-0 rounded-[7px]"
+        decoding="async"
+      />
+      <span class="truncate text-[12px] font-extrabold uppercase tracking-[0.03em] text-white sm:text-[15px]">
+        Moving to <span class="text-accent">Ireland</span>
+      </span>
+    </a>
+
+    <div class="flex shrink-0 items-center gap-0.5">
+      {
+        NAV.map((item) => (
+          <a
+            href={item.href}
+            aria-current={isActive(item.href) ? 'page' : undefined}
+            class:list={[
+              'hidden min-h-[44px] items-center px-2.5 text-[13px] font-semibold uppercase tracking-[0.05em] no-underline transition-colors md:inline-flex',
+              isActive(item.href) ? 'text-white' : 'text-white/80 hover:text-white',
+            ]}
+          >
+            {item.label}
+          </a>
+        ))
+      }
+      <a
+        href={APP_STORE_URL}
+        target="_blank"
+        rel="noopener"
+        data-placement="navbar"
+        class="ml-1 inline-flex min-h-[40px] items-center rounded-[10px] bg-accent px-3 text-[11px] font-extrabold uppercase tracking-[0.04em] text-white no-underline transition hover:bg-accent-dark sm:text-[12px]"
+      >
+        Get the App
+      </a>
+    </div>
+  </nav>
+
+  <div class="border-t border-white/10 md:hidden">
+    <div class="mx-auto flex max-w-[1040px] gap-1 overflow-x-auto px-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+      {
+        NAV.map((item) => (
+          <a
+            href={item.href}
+            aria-current={isActive(item.href) ? 'page' : undefined}
+            class:list={[
+              'inline-flex min-h-[42px] shrink-0 items-center px-2.5 text-[12px] font-semibold uppercase tracking-[0.04em] no-underline',
+              isActive(item.href) ? 'text-white' : 'text-white/75',
+            ]}
+          >
+            {item.label}
+          </a>
+        ))
+      }
+    </div>
+  </div>
+</header>

@@ -1,0 +1,29 @@
+---
+import Base from '../layouts/Base.astro';
+import { categories, categoryPath, CATEGORY_ICONS } from '../lib/guides';
+import { SITE_NAME } from '../lib/site';
+---
+
+<Base title={`Page not found | ${SITE_NAME}`} description="That page does not exist." noindex>
+  <div class="hero-band px-4 py-12 sm:px-6">
+    <div class="mx-auto max-w-[760px]">
+      <h1 class="mb-2 text-[clamp(24px,4.4vw,36px)]">Page not found</h1>
+      <p class="text-[15px] text-white/85">The address may have changed when the site moved to its new guides.</p>
+    </div>
+  </div>
+  <section class="mx-auto max-w-[760px] px-4 pt-9 sm:px-6">
+    <p class="mb-4 text-[15px] text-ink-soft">Try one of the guide sections instead:</p>
+    <ul class="grid list-none gap-2 p-0 sm:grid-cols-2">
+      {
+        categories.map((c) => (
+          <li>
+            <a href={categoryPath(c)} class="hair flex min-h-[52px] items-center gap-3 rounded-[10px] px-4 text-[15px] font-bold text-brand-dark no-underline hover:border-brand">
+              <span aria-hidden="true">{CATEGORY_ICONS[c.slug]}</span> {c.name}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+    <p class="mt-6 text-[15px]"><a href="/">Back to the home page</a></p>
+  </section>
+</Base>

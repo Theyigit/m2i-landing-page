@@ -1,113 +1,65 @@
-# Automatic App Landing Page
-**Create and deploy an iOS app landing page on GitHub Pages in only five minutes.**
+# Moving to Ireland — website
 
-Designed for GitHub Pages for super easy set up. 
+Marketing site and organic-traffic funnel for the
+[Moving to Ireland](https://apps.apple.com/app/moving-to-ireland/id6446055261) iOS app
+(source: `~/Developer/ProgressApp`). Same strategy as
+[ukdrivingtestcentres.co.uk](https://github.com/Theyigit/uk-driving-test-centres-website):
+content pages rank, every page funnels to the App Store.
 
-🔧 Fork this repo
+**Domain:** `www.movingtoireland.co` (set in `astro.config.mjs`, `src/lib/site.ts`,
+`public/CNAME` and the sitemap line of `public/robots.txt`).
 
-🗝 Enter iOS App ID in `_config.yml`
+## How the funnel works
 
-📲 Upload video preview or screenshot
+The app bundles 55 guides (about 21,000 words) across 8 categories. The site
+publishes the **opening ~20% of every guide** as its own page, then a Medium-style
+gate: the last visible paragraph fades out under a "keep reading in the app" panel
+listing the sections still to come. Only the preview is ever emitted — the rest of
+each article never reaches the build output, so there is nothing to un-hide.
 
-🎨 Customise site in `_config.yml` (no HTML/CSS)
+```
+/                                  home: hero, categories, start-here, app features, FAQ
+/guides/                           every guide grouped by category
+/guides/<category>/                category hub, guides in the app's step order
+/guides/<category>/<slug>/         guide preview + gate + neighbours + app CTA
+/privacy/  /terms/                 legal (old /privacypolicy and /termsofservice redirect here)
+```
 
-📝 Write Privacy Policy as markdown in `privacypolicy.md`
+## Content pipeline
 
-🕒 Keep a changelog in `CHANGELOG.md`
+```
+~/Developer/ProgressApp/.../Content/content.json + <Category>/<n>-<slug>.html
+   │   (Google Docs HTML exports, as bundled in the app)
+   ▼
+scripts/build_content.py  →  src/data/guides.json   (committed)
+scripts/build_images.py   →  favicons, CTA screenshot WebP, OG card
+```
 
-✅ Site becomes live at GitHub Pages repository URL, e.g. `https://your-username.github.io/your-repo-name/`.
+```bash
+npm run content:build   # re-run when the app's content changes
+```
 
-<img src="https://emilbaehr.com/files/jayson1.png" width="440"> <img src="https://emilbaehr.com/files/slor1.png" width="440">
+`build_content.py` strips the Google Docs CSS and classes, unwraps the
+`google.com/url` redirect links, maps document styles to `h2`/`h3`/`strong`, and
+cuts the preview at a block boundary near `PREVIEW_SHARE` (a long list or table can
+push individual articles to 10–40%). Titles that were misspelt or ambiguous in the
+app are corrected in `TITLE_FIXES`.
 
+## Tech stack
 
+Astro 6 static output, Tailwind CSS 4, no client JavaScript except the optional
+GA4 loader (`GA4_ID` in `src/lib/site.ts`, empty by default). Requires Node 22+.
 
+```bash
+nvm use 22
+npm install
+npm run dev       # http://localhost:4321
+npm run build     # → dist/
+```
 
-## Quick Start
+## Deploy
 
-### Step 1: Fork this repo.
-After forking the repo, your site will be live immediately on your personal Github Pages account, e.g. `https://yourusername.github.io/your-repo-name/`.
-
-*Make sure GitHub Pages is enabled for your repo. It might take some time for the site to propagate entirely.*
-
-
-
-### Step 2: Enter iOS App ID in `_config.yml`
-Enter your iOS app ID in the `ios_app_id` field and commit your changes. Your site will automatically rebuild with your app icon, name, price and link to App Store.
-
-You can go on with customising almost anything in the `_config.yml` file. 
-
-Things you can customise in `_config.yml`:
-- App Name
-- App Icon
-- App Description
-- App Price
-- App Store Link
-- Play Store Link
-- Press Kit Download Link
-- Cover Image
-- Cover Overlay Color
-- Background Color
-- Text Colors
-- iPhone Device Color
-- Your Name / Company Name
-- Link to Website
-- Social Links and Contact Info
-- Feature List (Title, text, icon)
-
-
-
-### Step 3: Add screenshot or video
-
-#### Adding a screenshot
-Upload a `.png` or `.jpg` of your app to the folder `assets/screenshot/`. The name does not matter. Be sure to delete the placeholder `yourscreenshot.png`.
-
-#### Adding video
-Upload your video to the folder `assets/videos/`. To have support for most browsers, you need to upload two files – one for Safari and one for Chrome/Firefox.
-
-Video formats supported by Chrome and Firefox:
-- `.webm`
-- `.ogg`
-
-Video formats supported by Safari:
-- `.mp4`
-- `.mov`
-
-#### Resolutions
-The videos and screenshots must have one of the following resolutions:
-- 828x1792
-- 1125x2436
-- 1242x2688
-
-
-
-### Step 4: Edit (or remove) Privacy Policy and Changelog
-Your site automatically includes pages for a Privacy Policy and a Changelog. Change the content of these pages by editing the `privacypolicy.md` and `CHANGELOG.md` files in the `_pages` directory.
-
-In each of the markdown files, you can set the `include_in_header:` value to either `true` or `false`. This determines if the page is included in the top navigation.
-By default, only the Changelog is included in the top navigation. The title of the navigation item can also be edited, by editing the `title:` in each markdown file.
-
-If you need to, you can create additional markdown based pages just by creating an `.md` file like the `privacypolicy.md` and `CHANGELOG.md` files in the `_pages` directory.
-
-**Please note:** The Privacy Policy and Changelog provided are written using dummy text, so please adapt each of them for your own app.
-You can also choose not to include these pages, by simple deleting the `privacypolicy.md` and `CHANGELOG.md` files.
-
-
-
-
-## Feedback
-If you have feedback regarding bugs or improvements, open an issue, @ me on Twitter or write me an email. You can find my contact info on my website.
-
-I'd love to see the sites you create using this little tool.
-
-## Credits
-- [Jekyll](https://github.com/jekyll/jekyll)
-- [FontAwesome](https://fontawesome.github.io/Font-Awesome/)
-
-## Donations
-[Donations are welcome](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=S8ZZT3JXJPN92&currency_code=USD&source=url)
-
-## Author
-[Emil Baehr](https://emilbaehr.com/)
-
-## License
-[MIT License](LICENSE)
+GitHub Pages via `.github/workflows/deploy.yml`. The repo was a Jekyll template
+that Pages built itself; **Settings → Pages → Source must be switched to "GitHub
+Actions"** once, after which every push to `master` deploys. `public/CNAME` keeps
+the custom domain.

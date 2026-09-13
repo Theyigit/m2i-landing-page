@@ -1,0 +1,233 @@
+---
+import Base from '../layouts/Base.astro';
+import AppCTA from '../components/AppCTA.astro';
+import ArticleCard from '../components/ArticleCard.astro';
+import {
+  categories,
+  categoryPath,
+  findCategory,
+  articleCount,
+  wordCount,
+  CATEGORY_BLURBS,
+  CATEGORY_ICONS,
+} from '../lib/guides';
+import { SITE_NAME, SITE_URL, APP_STORE_URL, APP_RATING, ORG_ID, WEBSITE_ID } from '../lib/site';
+
+const title = 'Moving to Ireland: the expat guide and relocation checklist app';
+const description =
+  'Free guides to moving to Ireland — visas, PPS number, renting, healthcare, schools, transport and pets — plus the Moving to Ireland app that turns them into a personal step-by-step checklist.';
+
+// The "start here" strip: the first step of each of the four sections a new
+// arrival hits first.
+const startHere = [
+  ['pre-move', 'obtain-your-visa'],
+  ['paperwork', 'your-1st-priority-apply-for-pps-number'],
+  ['accommodation', 'how-to-rent-accommodation-in-ireland'],
+  ['healthcare', 'irish-healthcare-system'],
+]
+  .map(([c, s]) => {
+    const category = findCategory(c)!;
+    const article = category.articles.find((a) => a.slug === s)!;
+    return { category, article };
+  });
+
+const features = [
+  {
+    title: 'Step-by-step checklist',
+    text: 'Every task in the order it has to happen, ticked off as you go, so nothing important slips.',
+  },
+  {
+    title: `${articleCount} in-depth guides`,
+    text: `Around ${Math.round(wordCount / 1000)},000 words — roughly 170 book pages — covering the whole move in one place.`,
+  },
+  {
+    title: 'Tailored to your passport',
+    text: 'EU, non-EU and US citizens face different steps. The app shows only the ones that apply to you.',
+  },
+  {
+    title: 'Pre-move and post-move',
+    text: 'Useful before you have a flight booked, and still useful when you are opening a bank account.',
+  },
+  {
+    title: 'Family and pets',
+    text: 'Extra sections for your partner, children and pets, switched on when you say who is coming.',
+  },
+  {
+    title: 'Works offline',
+    text: 'The guides are on the device, so they are there at the airport and in the letting agent’s office.',
+  },
+];
+
+const faqs = [
+  {
+    q: 'What do I need to do first when I move to Ireland?',
+    a: 'Apply for a PPS number. It is the personal public service number that employers, Revenue, the HSE and most services ask for, and you cannot be paid properly without one. Non-EU citizens then register for their Irish Residence Permit. A bank account and a proof of address follow.',
+  },
+  {
+    q: 'Is the Moving to Ireland app free?',
+    a: 'The app is free to download and the first guides are free to read. Full access to every guide and the tailored checklist is a subscription, priced in the app.',
+  },
+  {
+    q: 'Are the guides on this website the full guides?',
+    a: 'No. Each page here is the opening of the guide, about a fifth of it. The complete guides live in the app, where they sit inside a checklist built around your passport, your move date and who is moving with you.',
+  },
+  {
+    q: 'Who writes the guides?',
+    a: 'They are written by Yigit Yilmaz, who made the move himself, and they link to the official source — Citizens Information, the HSE, Revenue, the Department of Justice — for every rule and fee they mention.',
+  },
+];
+
+const structuredData = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'WebPage',
+      '@id': `${SITE_URL}/#webpage`,
+      url: `${SITE_URL}/`,
+      name: title,
+      isPartOf: { '@id': WEBSITE_ID },
+      about: { '@id': ORG_ID },
+      primaryImageOfPage: { '@type': 'ImageObject', url: `${SITE_URL}/images/og-default.png` },
+    },
+    {
+      '@type': 'SoftwareApplication',
+      '@id': `${SITE_URL}/#app`,
+      name: SITE_NAME,
+      operatingSystem: 'iOS',
+      applicationCategory: 'TravelApplication',
+      url: APP_STORE_URL,
+      installUrl: APP_STORE_URL,
+      offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+      aggregateRating: {
+        '@type': 'AggregateRating',
+        ratingValue: APP_RATING.value,
+        ratingCount: APP_RATING.count,
+      },
+      publisher: { '@id': ORG_ID },
+    },
+    {
+      '@type': 'FAQPage',
+      mainEntity: faqs.map((f) => ({
+        '@type': 'Question',
+        name: f.q,
+        acceptedAnswer: { '@type': 'Answer', text: f.a },
+      })),
+    },
+  ],
+};
+---
+
+<Base title={title} description={description}>
+  <script slot="head" type="application/ld+json" is:inline set:html={JSON.stringify(structuredData)} />
+
+  <!-- Hero -->
+  <div class="hero-band px-4 pb-0 pt-12 sm:px-6">
+    <div class="mx-auto grid max-w-[1040px] items-end gap-8 md:grid-cols-[1.2fr_1fr]">
+      <div class="pb-12">
+        <p class="mb-2 text-[12px] font-extrabold uppercase tracking-[0.08em] text-accent">
+          Expat guide · iPhone & iPad
+        </p>
+        <h1 class="mb-3 text-[clamp(30px,5.4vw,48px)]">Moving to Ireland, one step at a time</h1>
+        <p class="mb-5 max-w-[540px] text-[17px] leading-relaxed text-white/85">
+          {articleCount} guides on visas, paperwork, renting, healthcare, schools,
+          transport and pets — free to start reading here, and turned into a
+          personal checklist in the app.
+        </p>
+        <div class="flex flex-wrap items-center gap-4">
+          <a href={APP_STORE_URL} target="_blank" rel="noopener" data-placement="hero" class="inline-block min-h-[48px] transition hover:opacity-85">
+            <img src="/images/app-store-badge.svg" alt="Download Moving to Ireland on the App Store" width="160" height="53" />
+          </a>
+          <a
+            href="/guides/"
+            class="inline-flex min-h-[48px] items-center rounded-[12px] border-[1.5px] border-white/40 px-5 text-[14px] font-extrabold uppercase tracking-[0.04em] text-white no-underline hover:bg-white/10"
+          >
+            Read the guides
+          </a>
+        </div>
+        <p class="mt-4 text-[13px] font-semibold text-white/70">
+          <span class="text-accent" aria-hidden="true">★★★★★</span>
+          {' '}{APP_RATING.value} on the App Store
+        </p>
+      </div>
+      <div class="hidden justify-self-center md:block">
+        <img
+          src="/images/home-screen.webp"
+          alt="Moving to Ireland app home screen listing the relocation checklist categories"
+          class="w-full max-w-[300px] rounded-t-[26px] shadow-[0_-10px_40px_rgba(0,0,0,0.25)]"
+          width="720"
+          height="1561"
+          fetchpriority="high"
+          style="clip-path: inset(0 0 22% 0); margin-bottom: -22%"
+        />
+      </div>
+    </div>
+  </div>
+
+  <!-- Categories -->
+  <section class="mx-auto max-w-[1040px] px-4 pt-10 sm:px-6">
+    <p class="mb-1 text-[12px] font-extrabold uppercase tracking-[0.08em] text-accent-text">The guides</p>
+    <h2 class="mb-4 text-[24px] text-brand-dark">Eight sections, in the order a move happens</h2>
+    <ul class="grid list-none gap-4 p-0 sm:grid-cols-2 lg:grid-cols-4">
+      {
+        categories.map((c) => (
+          <li class="panel flex flex-col px-5 py-5">
+            <p class="mb-2 text-[26px]" aria-hidden="true">{CATEGORY_ICONS[c.slug]}</p>
+            <h3 class="mb-1 text-[17px] font-bold">
+              <a href={categoryPath(c)} class="text-brand-dark no-underline hover:underline">
+                {c.name}
+              </a>
+            </h3>
+            <p class="mb-3 flex-1 text-[14px] leading-relaxed text-ink-soft">{CATEGORY_BLURBS[c.slug]}</p>
+            <p class="text-[12px] font-bold uppercase tracking-[0.05em] text-ink-faint">
+              {c.articles.length} guides
+            </p>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+
+  <!-- Start here -->
+  <section class="mx-auto max-w-[1040px] px-4 pt-12 sm:px-6">
+    <p class="mb-1 text-[12px] font-extrabold uppercase tracking-[0.08em] text-accent-text">Start here</p>
+    <h2 class="mb-4 text-[24px] text-brand-dark">The four guides most people need first</h2>
+    <ul class="grid list-none gap-3 p-0 md:grid-cols-2">
+      {startHere.map(({ category, article }) => <ArticleCard category={category} article={article} showCategory />)}
+    </ul>
+  </section>
+
+  <!-- App features -->
+  <section class="mx-auto max-w-[1040px] px-4 pt-12 sm:px-6">
+    <p class="mb-1 text-[12px] font-extrabold uppercase tracking-[0.08em] text-accent-text">The app</p>
+    <h2 class="mb-4 text-[24px] text-brand-dark">What the app adds to the guides</h2>
+    <ul class="grid list-none gap-4 p-0 sm:grid-cols-2 lg:grid-cols-3">
+      {
+        features.map((f) => (
+          <li class="hair hair-top rounded-[12px] px-5 py-5">
+            <h3 class="mb-1 text-[16px] font-bold text-ink">{f.title}</h3>
+            <p class="text-[14px] leading-relaxed text-ink-soft">{f.text}</p>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+
+  <!-- FAQ -->
+  <section class="mx-auto max-w-[760px] px-4 pt-12 sm:px-6">
+    <h2 class="mb-4 text-[20px] text-brand-dark">Frequently asked</h2>
+    {
+      faqs.map((f) => (
+        <details class="border-b border-line py-1">
+          <summary class="cursor-pointer py-2.5">
+            <h3 class="inline text-[16px] font-bold text-ink">{f.q}</h3>
+          </summary>
+          <p class="mb-3.5 text-[15px] leading-relaxed text-ink-soft">{f.a}</p>
+        </details>
+      ))
+    }
+  </section>
+
+  <section class="mx-auto max-w-[1040px] px-4 pt-12 sm:px-6">
+    <AppCTA placement="home-cta" />
+  </section>
+</Base>

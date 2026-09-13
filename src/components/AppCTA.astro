@@ -1,0 +1,89 @@
+---
+import { APP_STORE_URL, APP_FEATURES, APP_RATING } from '../lib/site';
+import { articleCount } from '../lib/guides';
+
+interface Props {
+  /** Topic word for the heading, e.g. "housing". Falls back to the generic line. */
+  topic?: string;
+  placement?: string;
+}
+
+const { topic, placement = 'cta' } = Astro.props;
+
+const heading = topic
+  ? `Get the full ${topic} roadmap in the app`
+  : 'Plan the whole move from your phone';
+---
+
+<section
+  class="hair hair-top grid items-center gap-6 rounded-[12px] bg-[linear-gradient(160deg,var(--color-brand-tint)_0%,#fff_55%)] px-5 py-7 sm:px-7 md:grid-cols-[1.15fr_1fr] md:gap-8"
+>
+  <div>
+    <p class="mb-1 text-[12px] font-extrabold uppercase tracking-[0.08em] text-accent-text">
+      {topic ? 'Keep going' : 'Beyond the guides'}
+    </p>
+    <h2 class="mb-2 text-[21px] text-brand-dark">{heading}</h2>
+    <p class="mb-4 text-[15px] leading-relaxed text-ink-soft">
+      Moving to Ireland turns {articleCount} guides into a personal checklist. Tell it
+      your passport, whether you have moved yet, and who is coming with you, and it
+      lays out every step in order — from the visa to the bins.
+    </p>
+
+    <ul class="mb-4 flex list-none flex-wrap gap-2 p-0">
+      {
+        APP_FEATURES.map((feature) => (
+          <li class="hair inline-flex items-center gap-1.5 rounded-full bg-white px-3 py-1.5 text-[13px] font-bold text-brand-dark">
+            <svg
+              width="11"
+              height="11"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="3.5"
+              stroke-linecap="round"
+              class="shrink-0 text-accent"
+              aria-hidden="true"
+            >
+              <path d="M20 6 9 17l-5-5" />
+            </svg>
+            {feature}
+          </li>
+        ))
+      }
+    </ul>
+
+    <div class="flex flex-wrap items-center gap-4">
+      <a
+        href={APP_STORE_URL}
+        target="_blank"
+        rel="noopener"
+        data-placement={placement}
+        class="inline-block min-h-[48px] transition hover:opacity-85"
+      >
+        <img
+          src="/images/app-store-badge.svg"
+          alt="Download Moving to Ireland on the App Store"
+          width="160"
+          height="53"
+          loading="lazy"
+        />
+      </a>
+      <p class="text-[13px] font-semibold text-ink-soft">
+        <span class="text-accent" aria-hidden="true">★★★★★</span>
+        {' '}{APP_RATING.value} on the App Store
+      </p>
+    </div>
+  </div>
+
+  <a href={APP_STORE_URL} target="_blank" rel="noopener" data-placement={`${placement}-image`} class="block justify-self-center">
+    <img
+      src="/images/home-screen.webp"
+      alt="Moving to Ireland app showing the home screen with the checklist of relocation categories"
+      class="w-full max-w-[280px] rounded-[22px] shadow-[0_18px_40px_var(--shadow-brand)]"
+      width="720"
+      height="1561"
+      loading="lazy"
+      decoding="async"
+    />
+  </a>
+</section>

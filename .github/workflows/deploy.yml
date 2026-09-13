@@ -1,0 +1,39 @@
+name: Deploy to GitHub Pages
+
+# The site was a Jekyll template that GitHub Pages built itself. It is now an
+# Astro build, so Pages has to be switched to "GitHub Actions" as its source
+# (Settings → Pages → Build and deployment → Source) and this workflow does
+# the build. public/CNAME keeps the custom domain across deploys.
+
+on:
+  push:
+    branches: [master]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: withastro/action@v3
+        with:
+          node-version: 22
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

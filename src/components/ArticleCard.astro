@@ -1,0 +1,42 @@
+---
+import type { Article, Category } from '../lib/guides';
+import { articlePath } from '../lib/guides';
+
+interface Props {
+  category: Category;
+  article: Article;
+  index?: number;
+  showCategory?: boolean;
+}
+
+const { category, article, index, showCategory = false } = Astro.props;
+---
+
+<li class="panel flex gap-4 px-5 py-4">
+  {
+    index !== undefined && (
+      <span class="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-brand-tint text-[13px] font-extrabold text-brand-dark">
+        {index}
+      </span>
+    )
+  }
+  <div class="min-w-0">
+    {
+      showCategory && (
+        <p class="mb-0.5 text-[11px] font-extrabold uppercase tracking-[0.08em] text-accent-text">
+          {category.name}
+        </p>
+      )
+    }
+    <h3 class="mb-1 text-[17px] font-bold leading-snug">
+      <a href={articlePath(category, article)} class="text-brand-dark no-underline hover:underline">
+        {article.title}
+      </a>
+    </h3>
+    <p class="mb-1.5 text-[14px] leading-relaxed text-ink-soft">{article.description}</p>
+    <p class="text-[12px] font-semibold text-ink-faint">
+      {article.readMinutes} min read
+      {article.audience.length > 0 && <span> · For {article.audience.join(', ')}</span>}
+    </p>
+  </div>
+</li>

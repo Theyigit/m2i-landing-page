@@ -1,0 +1,96 @@
+---
+import Base from '../../layouts/Base.astro';
+import AppCTA from '../../components/AppCTA.astro';
+import {
+  categories,
+  categoryPath,
+  articlePath,
+  articleCount,
+  CATEGORY_BLURBS,
+  CATEGORY_ICONS,
+} from '../../lib/guides';
+import { SITE_NAME } from '../../lib/site';
+import { breadcrumbs, collectionPage, itemList } from '../../lib/schema';
+
+const title = `Moving to Ireland guides: ${articleCount} steps from visa to settled | ${SITE_NAME}`;
+const description =
+  'Practical guides to relocating to Ireland — visas and paperwork, renting a home, PPS number, healthcare, schools, transport, utilities and moving with pets — from the Moving to Ireland app.';
+
+const structuredData = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    collectionPage({ path: '/guides/', name: title, description }),
+    breadcrumbs([{ name: 'Guides' }]),
+    itemList(
+      'Moving to Ireland guide sections',
+      categories.map((c) => ({ name: c.name, path: categoryPath(c) })),
+    ),
+  ],
+};
+---
+
+<Base title={title} description={description}>
+  <script slot="head" type="application/ld+json" is:inline set:html={JSON.stringify(structuredData)} />
+
+  <div class="hero-band px-4 py-11 sm:px-6">
+    <div class="mx-auto max-w-[1040px]">
+      <nav aria-label="Breadcrumb" class="mb-3 text-[13px] text-white/70">
+        <a href="/" class="text-white/85 no-underline hover:underline">Home</a>
+        <span class="px-1.5">/</span>
+        <span aria-current="page">Guides</span>
+      </nav>
+      <h1 class="mb-2.5 text-[clamp(25px,4.6vw,38px)]">Moving to Ireland guides</h1>
+      <p class="max-w-[640px] text-[15px] text-white/85">
+        {articleCount} guides in the order a move actually happens: before you
+        leave, the paperwork that unlocks everything else, a home, and then the
+        rest of daily life.
+      </p>
+    </div>
+  </div>
+
+  {
+    categories.map((c) => (
+      <section class="mx-auto max-w-[1040px] px-4 pt-10 sm:px-6">
+        <div class="mb-4 flex flex-wrap items-end justify-between gap-2">
+          <div>
+            <p class="mb-0.5 text-[12px] font-extrabold uppercase tracking-[0.08em] text-accent-text">
+              <span aria-hidden="true">{CATEGORY_ICONS[c.slug]}</span> {c.articles.length} guides
+              {c.audience.length > 0 && <span> · for {c.audience.join(', ')}</span>}
+            </p>
+            <h2 class="text-[22px] text-brand-dark">
+              <a href={categoryPath(c)} class="no-underline hover:underline">
+                {c.name}
+              </a>
+            </h2>
+            <p class="max-w-[640px] text-[14px] text-ink-soft">{CATEGORY_BLURBS[c.slug]}</p>
+          </div>
+          <a
+            href={categoryPath(c)}
+            class="text-[13px] font-bold uppercase tracking-[0.05em] text-brand-dark no-underline hover:underline"
+          >
+            Open section →
+          </a>
+        </div>
+        <ul class="grid list-none gap-2 p-0 sm:grid-cols-2 lg:grid-cols-3">
+          {c.articles.map((a, i) => (
+            <li>
+              <a
+                href={articlePath(c, a)}
+                class="hair flex min-h-[56px] items-center gap-3 rounded-[10px] px-4 py-2 text-[14px] font-bold leading-snug text-brand-dark no-underline hover:border-brand"
+              >
+                <span class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-brand-tint text-[12px] font-extrabold">
+                  {i + 1}
+                </span>
+                <span>{a.title}</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </section>
+    ))
+  }
+
+  <section class="mx-auto max-w-[1040px] px-4 pt-12 sm:px-6">
+    <AppCTA placement="guides-cta" />
+  </section>
+</Base>

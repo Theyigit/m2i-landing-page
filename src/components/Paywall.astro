@@ -1,0 +1,93 @@
+---
+/**
+ * The Medium-style gate at the end of an article preview. Sits directly under
+ * the faded-out last paragraph; the article page wraps the tail of the preview
+ * in `.gate-fade` and this panel overlaps it.
+ */
+import { APP_STORE_URL, APP_NAME } from '../lib/site';
+import { articleCount } from '../lib/guides';
+
+interface Props {
+  title: string;
+  wordCount: number;
+  previewWordCount: number;
+  sections: string[];
+  readMinutes: number;
+}
+
+const { title, wordCount, previewWordCount, sections, readMinutes } = Astro.props;
+const remaining = wordCount - previewWordCount;
+const remainingMinutes = Math.max(1, Math.round(remaining / 220));
+const shown = Math.round((previewWordCount / wordCount) * 100);
+const upcoming = sections.filter((s) => !s.includes('Useful links')).slice(0, 4);
+---
+
+<aside
+  class="relative z-10 -mt-6 rounded-[14px] border-[1.5px] border-line bg-white px-5 py-6 shadow-[0_18px_44px_rgba(6,46,28,0.16)] sm:px-7 sm:py-7"
+  aria-labelledby="gate-title"
+>
+  <div class="mb-3 flex items-center gap-3">
+    <img src="/apple-touch-icon.png" alt="" width="44" height="44" class="rounded-[11px]" loading="lazy" />
+    <div>
+      <p class="text-[11px] font-extrabold uppercase tracking-[0.08em] text-accent-text">
+        You have read {shown}% of this guide
+      </p>
+      <h2 id="gate-title" class="text-[19px] leading-tight text-brand-dark">
+        Keep reading in the {APP_NAME} app
+      </h2>
+    </div>
+  </div>
+
+  <p class="mb-4 text-[15px] leading-relaxed text-ink-soft">
+    The rest of <strong class="text-ink">{title}</strong> — about {remainingMinutes}
+    {remainingMinutes === 1 ? 'minute' : 'minutes'} more — is in the app, free to
+    download, alongside {articleCount - 1} other guides and a checklist built around your
+    own move.
+  </p>
+
+  {
+    upcoming.length > 0 && (
+      <div class="mb-4">
+        <p class="mb-1.5 text-[12px] font-bold uppercase tracking-[0.06em] text-ink-faint">
+          Still to come in this guide
+        </p>
+        <ul class="list-none space-y-1 p-0 text-[14px] text-ink-soft">
+          {upcoming.map((s) => (
+            <li class="flex items-start gap-2">
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.5"
+                class="mt-[3px] shrink-0 text-accent"
+                aria-hidden="true"
+              >
+                <rect x="4" y="10" width="16" height="11" rx="2" />
+                <path d="M8 10V7a4 4 0 0 1 8 0v3" />
+              </svg>
+              {s}
+            </li>
+          ))}
+        </ul>
+      </div>
+    )
+  }
+
+  <div class="flex flex-wrap items-center gap-4">
+    <a
+      href={APP_STORE_URL}
+      target="_blank"
+      rel="noopener"
+      data-placement="paywall"
+      class="inline-flex min-h-[50px] items-center gap-2 rounded-[12px] bg-brand px-5 text-[15px] font-extrabold text-white no-underline transition hover:bg-brand-dark"
+    >
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <path d="M16.37 12.6c-.03-2.7 2.2-4 2.3-4.06-1.26-1.84-3.2-2.1-3.9-2.12-1.66-.17-3.24.98-4.08.98-.84 0-2.14-.96-3.52-.93-1.8.03-3.47 1.05-4.4 2.67-1.88 3.26-.48 8.08 1.35 10.72.9 1.3 1.96 2.75 3.36 2.7 1.35-.05 1.86-.87 3.5-.87 1.63 0 2.09.87 3.52.84 1.45-.03 2.37-1.32 3.26-2.62 1.03-1.5 1.45-2.96 1.47-3.04-.03-.01-2.82-1.08-2.86-4.27zM13.7 4.67c.74-.9 1.24-2.15 1.1-3.4-1.07.04-2.36.71-3.13 1.61-.69.8-1.29 2.07-1.13 3.29 1.19.09 2.41-.6 3.16-1.5z" />
+      </svg>
+      Download free on the App Store
+    </a>
+    <p class="text-[13px] text-ink-faint">iPhone and iPad · no account needed</p>
+  </div>
+</aside>

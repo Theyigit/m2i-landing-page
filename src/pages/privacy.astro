@@ -1,0 +1,106 @@
+---
+import Base from '../layouts/Base.astro';
+import { CONTACT_EMAIL, SITE_NAME, AUTHOR } from '../lib/site';
+---
+
+<Base
+  title={`Privacy Policy | ${SITE_NAME}`}
+  description="How the Moving to Ireland app and website handle personal information: what is collected, by which services, and how to contact us."
+>
+  <div class="hero-band px-4 py-10 sm:px-6">
+    <div class="mx-auto max-w-[760px]">
+      <h1 class="text-[clamp(24px,4.4vw,34px)]">Privacy policy</h1>
+      <p class="mt-2 text-[15px] text-white/85">Last updated 13 September 2026 · effective from 20 February 2023</p>
+    </div>
+  </div>
+
+  <article class="prose mx-auto max-w-[760px] px-4 pt-9 sm:px-6">
+    <p>
+      {AUTHOR} built the Moving to Ireland app as a freemium app and publishes this
+      website. This page explains what information the app and the website collect,
+      how it is used, and who it is shared with. By using either, you agree to the
+      collection and use of information as described here.
+    </p>
+
+    <h2>The website</h2>
+    <p>
+      This is a static site. It has no accounts, logins, comments or forms, and it
+      does not set cookies of its own. When you tap through to the App Store, Apple
+      handles that visit under its own privacy policy.
+    </p>
+
+    <h2>Information the app collects</h2>
+    <p>
+      To tailor the checklist, the app asks for a few details about your move —
+      such as your country of citizenship, whether you have already arrived, and
+      whether you are moving with a partner, children or pets. This information is
+      stored on your device and is not sent to us.
+    </p>
+    <p>
+      The app uses third-party services that may collect information used to
+      identify you. Their privacy policies are here:
+    </p>
+    <ul>
+      <li><a href="https://firebase.google.com/policies/analytics" target="_blank" rel="noopener">Google Analytics for Firebase</a></li>
+      <li><a href="https://firebase.google.com/support/privacy/" target="_blank" rel="noopener">Firebase Crashlytics</a></li>
+      <li><a href="https://mixpanel.com/legal/privacy-policy/" target="_blank" rel="noopener">Mixpanel</a></li>
+      <li><a href="https://amplitude.com/privacy" target="_blank" rel="noopener">Amplitude</a></li>
+      <li><a href="https://www.revenuecat.com/privacy" target="_blank" rel="noopener">RevenueCat</a> (subscription management)</li>
+    </ul>
+
+    <h2>Log data</h2>
+    <p>
+      If the app crashes or errors, these services collect log data from your
+      phone: its IP address, device name, operating system version, the app's
+      configuration at the time, the date and time, and similar statistics.
+    </p>
+
+    <h2>Cookies</h2>
+    <p>
+      The app does not use cookies explicitly, but the third-party code it includes
+      may use cookies or similar identifiers to improve its services. You can refuse
+      them, though some parts of the app may then not work.
+    </p>
+
+    <h2>Service providers</h2>
+    <p>
+      We employ third-party companies to facilitate the app, provide it on our
+      behalf, perform related services, or help us analyse how it is used. They have
+      access to your personal information only to perform those tasks and are
+      obliged not to disclose or use it for any other purpose.
+    </p>
+
+    <h2>Security</h2>
+    <p>
+      We use commercially acceptable means to protect your personal information,
+      but no method of transmission over the internet or of electronic storage is
+      completely secure, and we cannot guarantee its absolute security.
+    </p>
+
+    <h2>Links to other sites</h2>
+    <p>
+      The guides link to official Irish sources and other external sites. We do not
+      operate those sites and are not responsible for their content or privacy
+      practices; review their policies before sharing information with them.
+    </p>
+
+    <h2>Children's privacy</h2>
+    <p>
+      The app and website are not addressed to anyone under 13, and we do not
+      knowingly collect personal information from children under 13. If you believe
+      a child has provided us with personal information, contact us and we will
+      delete it.
+    </p>
+
+    <h2>Changes to this policy</h2>
+    <p>
+      We may update this policy from time to time. Changes are posted on this page
+      with a new "last updated" date.
+    </p>
+
+    <h2>Contact</h2>
+    <p>
+      Questions about this policy: <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>.
+    </p>
+  </article>
+</Base>

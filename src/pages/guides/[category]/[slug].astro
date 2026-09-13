@@ -1,0 +1,172 @@
+---
+import Base from '../../../layouts/Base.astro';
+import AppCTA from '../../../components/AppCTA.astro';
+import Paywall from '../../../components/Paywall.astro';
+import ArticleCard from '../../../components/ArticleCard.astro';
+import { categories, categoryPath, articlePath, generated } from '../../../lib/guides';
+import type { Article, Category } from '../../../lib/guides';
+import { SITE_URL, SITE_NAME, AUTHOR, ORG_ID, WEBSITE_ID, APP_STORE_URL } from '../../../lib/site';
+import { breadcrumbs } from '../../../lib/schema';
+import { dateLabel } from '../../../lib/format';
+
+export function getStaticPaths() {
+  return categories.flatMap((category) =>
+    category.articles.map((article, index) => ({
+      params: { category: category.slug, slug: article.slug },
+      props: { category, article, index },
+    })),
+  );
+}
+
+interface Props {
+  category: Category;
+  article: Article;
+  index: number;
+}
+
+const { category, article, index } = Astro.props;
+const path = articlePath(category, article);
+const pageUrl = `${SITE_URL}${path}`;
+
+const metaTitle = `${article.title} | ${category.name} | ${SITE_NAME}`;
+
+// The gate: everything but the last preview block reads normally; the last
+// one dissolves under the panel. A one-block preview has nothing to fade.
+const blocks = article.previewHtml.split('\n');
+const fadeLast = blocks.length > 1;
+const headHtml = (fadeLast ? blocks.slice(0, -1) : blocks).join('\n');
+const tailHtml = fadeLast ? blocks[blocks.length - 1] : '';
+
+const prev = index > 0 ? category.articles[index - 1] : undefined;
+const next = index < category.articles.length - 1 ? category.articles[index + 1] : undefined;
+const related = category.articles.filter((a) => a.slug !== article.slug).slice(0, 4);
+
+const topicWord: Record<string, string> = {
+  'pre-move': 'pre-move',
+  pets: 'pet relocation',
+  paperwork: 'paperwork',
+  accommodation: 'housing',
+  utilities: 'utilities',
+  transportation: 'transport',
+  healthcare: 'healthcare',
+  schooling: 'schooling',
+};
+
+const structuredData = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'Article',
+      '@id': `${pageUrl}#article`,
+      headline: article.title,
+      description: article.description,
+      articleSection: category.name,
+      inLanguage: 'en-IE',
+      wordCount: article.previewWordCount,
+      author: { '@type': 'Person', name: AUTHOR, url: `${SITE_URL}/` },
+      publisher: { '@id': ORG_ID },
+      isPartOf: { '@id': WEBSITE_ID },
+      image: `${SITE_URL}/images/og-default.png`,
+      datePublished: generated,
+      dateModified: generated,
+      mainEntityOfPage: pageUrl,
+      // The page is a free excerpt; the full text lives in the app.
+      isAccessibleForFree: true,
+      workExample: {
+        '@type': 'SoftwareApplication',
+        name: SITE_NAME,
+        operatingSystem: 'iOS',
+        applicationCategory: 'TravelApplication',
+        url: APP_STORE_URL,
+      },
+    },
+    breadcrumbs([
+      { name: 'Guides', path: '/guides/' },
+      { name: category.name, path: categoryPath(category) },
+      { name: article.title },
+    ]),
+  ],
+};
+---
+
+<Base title={metaTitle} description={article.description} ogType="article">
+  <script slot="head" type="application/ld+json" is:inline set:html={JSON.stringify(structuredData)} />
+
+  <div class="hero-band px-4 py-10 sm:px-6">
+    <div class="mx-auto max-w-[760px]">
+      <nav aria-label="Breadcrumb" class="mb-3 text-[13px] text-white/70">
+        <a href="/" class="text-white/85 no-underline hover:underline">Home</a>
+        <span class="px-1.5">/</span>
+        <a href="/guides/" class="text-white/85 no-underline hover:underline">Guides</a>
+        <span class="px-1.5">/</span>
+        <a href={categoryPath(category)} class="text-white/85 no-underline hover:underline">{category.name}</a>
+      </nav>
+      <p class="mb-1 text-[12px] font-extrabold uppercase tracking-[0.08em] text-accent">
+        {category.name} · Step {index + 1} of {category.articles.length}
+      </p>
+      <h1 class="mb-2 text-[clamp(24px,4.4vw,36px)]">{article.title}</h1>
+      {
+        article.audience.length > 0 && (
+          <p class="mb-2 inline-block rounded-full bg-white/15 px-3 py-1 text-[13px] font-bold text-white">
+            For {article.audience.join(', ')}
+          </p>
+        )
+      }
+      <p class="mt-2 text-[13px] text-white/65">
+        By {AUTHOR} · {article.readMinutes} min read · Updated{' '}
+        <time datetime={generated}>{dateLabel(generated)}</time>
+      </p>
+    </div>
+  </div>
+
+  <article class="mx-auto max-w-[760px] px-4 pt-9 sm:px-6">
+    <div class="prose" set:html={headHtml} />
+    {fadeLast && <div class="prose gate-fade" aria-hidden="true" set:html={tailHtml} />}
+    <Paywall
+      title={article.title}
+      wordCount={article.wordCount}
+      previewWordCount={article.previewWordCount}
+      sections={article.sections}
+      readMinutes={article.readMinutes}
+    />
+  </article>
+
+  <nav class="mx-auto mt-8 flex max-w-[760px] flex-wrap justify-between gap-3 px-4 sm:px-6" aria-label="Neighbouring guides">
+    {
+      prev ? (
+        <a href={articlePath(category, prev)} class="hair inline-flex min-h-[48px] items-center gap-2 rounded-[10px] px-4 text-[14px] font-bold text-brand-dark no-underline hover:border-brand">
+          <span aria-hidden="true">←</span> {prev.title}
+        </a>
+      ) : (
+        <span />
+      )
+    }
+    {
+      next && (
+        <a href={articlePath(category, next)} class="hair inline-flex min-h-[48px] items-center gap-2 rounded-[10px] px-4 text-[14px] font-bold text-brand-dark no-underline hover:border-brand">
+          {next.title} <span aria-hidden="true">→</span>
+        </a>
+      )
+    }
+  </nav>
+
+  {
+    related.length > 0 && (
+      <section class="mx-auto max-w-[760px] px-4 pt-10 sm:px-6">
+        <h2 class="mb-1 text-[20px] text-brand-dark">More on {category.name.toLowerCase()}</h2>
+        <p class="mb-4 text-[14px] text-ink-soft">
+          <a href={categoryPath(category)}>All {category.articles.length} guides in this section</a>
+        </p>
+        <ul class="grid list-none gap-3 p-0">
+          {related.map((a) => (
+            <ArticleCard category={category} article={a} />
+          ))}
+        </ul>
+      </section>
+    )
+  }
+
+  <section class="mx-auto max-w-[1040px] px-4 pt-10 sm:px-6">
+    <AppCTA topic={topicWord[category.slug]} placement="article-cta" />
+  </section>
+</Base>
