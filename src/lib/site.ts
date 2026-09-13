@@ -14,8 +14,12 @@ export const APP_STORE_URL = `https://apps.apple.com/app/moving-to-ireland/${APP
 /** As reported by the App Store lookup API. Update when it moves. */
 export const APP_RATING = { value: 4.9, count: 11 };
 
-/** GA4 measurement id. Empty string disables analytics entirely. */
-export const GA4_ID = '';
+/**
+ * Google tag ids loaded on every page: the Google Ads tag the old site carried.
+ * Add a GA4 measurement id (G-…) here to get page analytics too. An empty list
+ * disables the tag entirely.
+ */
+export const GTAG_IDS = ['AW-930149183'];
 
 export const CONTACT_EMAIL = 'support@movingtoireland.co';
 export const AUTHOR = 'Yigit Yilmaz';

@@ -2,7 +2,7 @@
 import '../styles/global.css';
 import Navbar from '../components/Navbar.astro';
 import Footer from '../components/Footer.astro';
-import { SITE_URL, SITE_NAME, APP_ID, GA4_ID, ORG_ID, WEBSITE_ID, SOCIAL } from '../lib/site';
+import { SITE_URL, SITE_NAME, APP_ID, GTAG_IDS, ORG_ID, WEBSITE_ID, SOCIAL } from '../lib/site';
 
 interface Props {
   title: string;
@@ -100,19 +100,19 @@ const siteGraph = {
     <script type="application/ld+json" is:inline set:html={JSON.stringify(siteGraph)} />
     <slot name="head" />
     {
-      GA4_ID && (
-        <script is:inline define:vars={{ GA4_ID, APP_ID }}>
+      GTAG_IDS.length > 0 && (
+        <script is:inline define:vars={{ GTAG_IDS, APP_ID }}>
           window.dataLayer = window.dataLayer || [];
           function gtag() { dataLayer.push(arguments); }
           gtag('js', new Date());
-          gtag('config', GA4_ID);
+          GTAG_IDS.forEach(function (id) { gtag('config', id); });
           var gtagLoaded = false;
           function loadGtag() {
             if (gtagLoaded) return;
             gtagLoaded = true;
             var s = document.createElement('script');
             s.async = true;
-            s.src = 'https://www.googletagmanager.com/gtag/js?id=' + GA4_ID;
+            s.src = 'https://www.googletagmanager.com/gtag/js?id=' + GTAG_IDS[0];
             document.head.appendChild(s);
           }
           var events = ['scroll', 'pointerdown', 'keydown', 'touchstart'];

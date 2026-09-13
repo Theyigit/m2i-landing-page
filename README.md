@@ -48,7 +48,7 @@ app are corrected in `TITLE_FIXES`.
 ## Tech stack
 
 Astro 6 static output, Tailwind CSS 4, no client JavaScript except the optional
-GA4 loader (`GA4_ID` in `src/lib/site.ts`, empty by default). Requires Node 22+.
+deferred Google tag loader (`GTAG_IDS` in `src/lib/site.ts`: the Ads tag, plus a GA4 id if you add one). Requires Node 22+.
 
 ```bash
 nvm use 22
