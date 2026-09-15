@@ -2,7 +2,7 @@
 import Base from '../../../layouts/Base.astro';
 import AppCTA from '../../../components/AppCTA.astro';
 import ArticleCard from '../../../components/ArticleCard.astro';
-import { categories, categoryPath, articlePath, CATEGORY_BLURBS, CATEGORY_ICONS } from '../../../lib/guides';
+import { categories, categoryPath, articlePath, isInApp, REGIONS, CATEGORY_BLURBS, CATEGORY_ICONS } from '../../../lib/guides';
 import type { Category } from '../../../lib/guides';
 import { SITE_NAME } from '../../../lib/site';
 import { breadcrumbs, collectionPage, itemList } from '../../../lib/schema';
@@ -22,7 +22,10 @@ const { category } = Astro.props;
 const path = categoryPath(category);
 const minutes = category.articles.reduce((sum, a) => sum + a.readMinutes, 0);
 
-const title = `${category.name} in Ireland: ${category.articles.length} guides for new arrivals | ${SITE_NAME}`;
+const title =
+  category.slug === 'moving-from'
+    ? `Moving to Ireland from your country: ${category.articles.length} country guides | ${SITE_NAME}`
+    : `${category.name} in Ireland: ${category.articles.length} guides for new arrivals | ${SITE_NAME}`;
 const description = `${CATEGORY_BLURBS[category.slug]} ${category.articles.length} step-by-step guides from the Moving to Ireland app.`;
 
 const structuredData = {
@@ -38,6 +41,15 @@ const structuredData = {
 };
 
 const others = categories.filter((c) => c.slug !== category.slug);
+
+// The "Moving from" hub: the in-depth app guides first, then every other
+// country grouped by region as a compact index.
+const appArticles = category.articles.filter(isInApp);
+const countryArticles = category.articles.filter((a) => !isInApp(a));
+const regions = Object.entries(REGIONS)
+  .map(([key, name]) => ({ key, name, articles: countryArticles.filter((a) => a.region === key) }))
+  .filter((r) => r.articles.length > 0);
+const isCountryHub = countryArticles.length > 0;
 ---
 
 <Base title={title} description={description}>
@@ -53,7 +65,9 @@ const others = categories.filter((c) => c.slug !== category.slug);
         <span aria-current="page">{category.name}</span>
       </nav>
       <p class="mb-1 text-[28px]" aria-hidden="true">{CATEGORY_ICONS[category.slug]}</p>
-      <h1 class="mb-2.5 text-[clamp(25px,4.6vw,38px)]">{category.name} in Ireland</h1>
+      <h1 class="mb-2.5 text-[clamp(25px,4.6vw,38px)]">
+        {category.slug === 'moving-from' ? 'Moving to Ireland from your country' : `${category.name} in Ireland`}
+      </h1>
       <p class="max-w-[640px] text-[15px] text-white/85">{CATEGORY_BLURBS[category.slug]}</p>
       <p class="mt-3 text-[13px] text-white/65">
         {category.articles.length} guides · about {minutes} minutes in total
@@ -62,16 +76,64 @@ const others = categories.filter((c) => c.slug !== category.slug);
     </div>
   </div>
 
-  <section class="mx-auto max-w-[760px] px-4 pt-9 sm:px-6">
-    <p class="mb-5 text-[15px] leading-relaxed text-ink-soft">
-      The guides below are in the order the app walks you through them — each one
-      unblocks the next. The opening of every guide is free to read here; the
-      full text is in the app.
-    </p>
-    <ol class="grid list-none gap-3 p-0">
-      {category.articles.map((a, i) => <ArticleCard category={category} article={a} index={i + 1} />)}
-    </ol>
-  </section>
+  {
+    isCountryHub ? (
+      <>
+        <section class="mx-auto max-w-[760px] px-4 pt-9 sm:px-6">
+          <p class="mb-5 text-[15px] leading-relaxed text-ink-soft">
+            Where you are moving from decides whether you need a visa, whether your
+            driving licence can be exchanged, how your tax and pension records carry
+            over, and what your pet needs. Start with the in-depth guides below, then
+            find your country in the index.
+          </p>
+          <h2 class="mb-3 text-[20px] text-brand-dark">In-depth guides in the app</h2>
+          <ol class="grid list-none gap-3 p-0">
+            {appArticles.map((a, i) => (
+              <ArticleCard category={category} article={a} index={i + 1} />
+            ))}
+          </ol>
+        </section>
+        <section class="mx-auto max-w-[1040px] px-4 pt-11 sm:px-6" id="all-countries">
+          <h2 class="mb-1 text-[20px] text-brand-dark">Every country, by region</h2>
+          <p class="mb-5 text-[14px] text-ink-soft">
+            {countryArticles.length} country guides: visa, licence, tax, pension, healthcare and pet rules for each.
+          </p>
+          {regions.map((r) => (
+            <div class="mb-7">
+              <h3 class="mb-2.5 text-[16px] font-bold text-brand-dark">
+                {r.name} <span class="text-[12px] font-semibold text-ink-faint">{r.articles.length}</span>
+              </h3>
+              <ul class="grid list-none gap-2 p-0 sm:grid-cols-2 lg:grid-cols-4">
+                {r.articles.map((a) => (
+                  <li>
+                    <a
+                      href={articlePath(category, a)}
+                      class="hair flex min-h-[46px] items-center rounded-[10px] px-4 text-[14px] font-bold text-brand-dark no-underline hover:border-brand"
+                    >
+                      {a.country!.charAt(0).toUpperCase() + a.country!.slice(1)}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </section>
+      </>
+    ) : (
+      <section class="mx-auto max-w-[760px] px-4 pt-9 sm:px-6">
+        <p class="mb-5 text-[15px] leading-relaxed text-ink-soft">
+          The guides below are in the order the app walks you through them — each one
+          unblocks the next. The opening of every guide is free to read here; the
+          full text is in the app.
+        </p>
+        <ol class="grid list-none gap-3 p-0">
+          {category.articles.map((a, i) => (
+            <ArticleCard category={category} article={a} index={i + 1} />
+          ))}
+        </ol>
+      </section>
+    )
+  }
 
   <section class="mx-auto max-w-[1040px] px-4 pt-11 sm:px-6">
     <h2 class="mb-4 text-[20px] text-brand-dark">Other sections</h2>

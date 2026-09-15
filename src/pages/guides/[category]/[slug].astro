@@ -3,7 +3,7 @@ import Base from '../../../layouts/Base.astro';
 import AppCTA from '../../../components/AppCTA.astro';
 import Paywall from '../../../components/Paywall.astro';
 import ArticleCard from '../../../components/ArticleCard.astro';
-import { categories, categoryPath, articlePath, generated, CATEGORY_TOPIC } from '../../../lib/guides';
+import { categories, categoryPath, articlePath, generated, countryGuidesGenerated, isInApp, CATEGORY_TOPIC } from '../../../lib/guides';
 import type { Article, Category } from '../../../lib/guides';
 import { SITE_URL, SITE_NAME, ORG_ID, WEBSITE_ID, APP_STORE_URL } from '../../../lib/site';
 import { breadcrumbs } from '../../../lib/schema';
@@ -30,16 +30,27 @@ const pageUrl = `${SITE_URL}${path}`;
 
 const metaTitle = `${article.title} | ${category.name} | ${SITE_NAME}`;
 
+// Country guides are website-only: the whole article is shown, no gate.
+const gated = isInApp(article);
+const updated = gated ? generated : countryGuidesGenerated;
+
 // The gate: everything but the last preview block reads normally; the last
 // one dissolves under the panel. A one-block preview has nothing to fade.
 const blocks = article.previewHtml.split('\n');
-const fadeLast = blocks.length > 1;
+const fadeLast = gated && blocks.length > 1;
 const headHtml = (fadeLast ? blocks.slice(0, -1) : blocks).join('\n');
 const tailHtml = fadeLast ? blocks[blocks.length - 1] : '';
 
 const prev = index > 0 ? category.articles[index - 1] : undefined;
 const next = index < category.articles.length - 1 ? category.articles[index + 1] : undefined;
-const related = category.articles.filter((a) => a.slug !== article.slug).slice(0, 4);
+// Country guides relate by region; app guides by their section.
+const related = (
+  article.region
+    ? category.articles.filter((a) => a.region === article.region && a.slug !== article.slug)
+    : category.articles.filter((a) => a.slug !== article.slug)
+).slice(0, 4);
+const featured = category.articles.filter((a) => isInApp(a) && a.slug !== article.slug).slice(0, 4);
+const stepLabel = category.slug === 'moving-from' ? 'Country guide' : `Step ${index + 1} of ${category.articles.length}`;
 
 const structuredData = {
   '@context': 'https://schema.org',
@@ -56,17 +67,20 @@ const structuredData = {
       publisher: { '@id': ORG_ID },
       isPartOf: { '@id': WEBSITE_ID },
       image: `${SITE_URL}/images/og-default.png`,
-      datePublished: generated,
-      dateModified: generated,
+      datePublished: updated,
+      dateModified: updated,
       mainEntityOfPage: pageUrl,
       // Google's paywalled-content markup: the whole article is in the HTML
       // for indexing, and the part after the preview is declared as gated.
-      isAccessibleForFree: false,
-      hasPart: {
-        '@type': 'WebPageElement',
-        isAccessibleForFree: false,
-        cssSelector: '.gated',
-      },
+      // Country guides are published in full.
+      isAccessibleForFree: !gated,
+      ...(gated && {
+        hasPart: {
+          '@type': 'WebPageElement',
+          isAccessibleForFree: false,
+          cssSelector: '.gated',
+        },
+      }),
       workExample: {
         '@type': 'SoftwareApplication',
         name: SITE_NAME,
@@ -97,7 +111,7 @@ const structuredData = {
         <a href={categoryPath(category)} class="text-white/85 no-underline hover:underline">{category.name}</a>
       </nav>
       <p class="mb-1 text-[12px] font-extrabold uppercase tracking-[0.08em] text-accent-light">
-        {category.name} · Step {index + 1} of {category.articles.length}
+        {category.name} · {stepLabel}
       </p>
       <h1 class="mb-2 text-[clamp(24px,4.4vw,36px)]">{article.title}</h1>
       {
@@ -109,7 +123,7 @@ const structuredData = {
       }
       <p class="mt-2 text-[13px] text-white/65">
         {article.readMinutes} min read · Updated{' '}
-        <time datetime={generated}>{dateLabel(generated)}</time>
+        <time datetime={updated}>{dateLabel(updated)}</time>
       </p>
     </div>
   </div>
@@ -120,14 +134,18 @@ const structuredData = {
     <!-- The rest of the article. Present in the markup so search engines and
          assistants can read the full guide; hidden from readers, who continue
          in the app. Declared as paywalled in the Article structured data. -->
-    {article.gatedHtml && <div class="prose gated" hidden set:html={article.gatedHtml} />}
-    <Paywall
-      title={article.title}
-      wordCount={article.wordCount}
-      previewWordCount={article.previewWordCount}
-      sections={article.sections}
-      readMinutes={article.readMinutes}
-    />
+    {gated && article.gatedHtml && <div class="prose gated" hidden set:html={article.gatedHtml} />}
+    {
+      gated && (
+        <Paywall
+          title={article.title}
+          wordCount={article.wordCount}
+          previewWordCount={article.previewWordCount}
+          sections={article.sections}
+          readMinutes={article.readMinutes}
+        />
+      )
+    }
   </article>
 
   <nav class="mx-auto mt-8 flex max-w-[760px] flex-wrap justify-between gap-3 px-4 sm:px-6" aria-label="Neighbouring guides">
@@ -152,12 +170,27 @@ const structuredData = {
   {
     related.length > 0 && (
       <section class="mx-auto max-w-[760px] px-4 pt-10 sm:px-6">
-        <h2 class="mb-1 text-[20px] text-brand-dark">More on {category.name.toLowerCase()}</h2>
+        <h2 class="mb-1 text-[20px] text-brand-dark">
+          {article.regionName ? `More movers from ${article.regionName}` : `More on ${category.name.toLowerCase()}`}
+        </h2>
         <p class="mb-4 text-[14px] text-ink-soft">
           <a href={categoryPath(category)}>All {category.articles.length} guides in this section</a>
         </p>
         <ul class="grid list-none gap-3 p-0">
           {related.map((a) => (
+            <ArticleCard category={category} article={a} />
+          ))}
+        </ul>
+      </section>
+    )
+  }
+
+  {
+    article.region && featured.length > 0 && (
+      <section class="mx-auto max-w-[760px] px-4 pt-10 sm:px-6">
+        <h2 class="mb-4 text-[20px] text-brand-dark">In-depth country guides in the app</h2>
+        <ul class="grid list-none gap-3 p-0">
+          {featured.map((a) => (
             <ArticleCard category={category} article={a} />
           ))}
         </ul>

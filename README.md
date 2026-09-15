@@ -45,6 +45,31 @@ scripts/build_images.py   →  favicons, CTA screenshot WebP, OG card
 npm run content:build   # re-run when the app's content changes
 ```
 
+### Country guides (website-only)
+
+`/guides/moving-from/` also carries a generated "Moving to Ireland from X" guide
+for 145 countries (every sovereign state above roughly a million people, plus
+the EU/EEA members). They are not in the app, so they are published in full with
+no gate and `isAccessibleForFree: true`.
+
+```
+scripts/countries/facts.py   per-country facts: visa status, licence exchange,
+                             tax and social security treaties, working holiday,
+                             pet listing, currency, direct flights
+scripts/countries/prose.json per-country editorial passages (intro, community,
+                             daily-life contrasts, language)
+scripts/build_countries.py   → src/data/country-guides.json   (committed)
+```
+
+```bash
+python3 scripts/build_countries.py   # re-run after editing facts or prose
+```
+
+The generator branches every rules section on the facts, so a change to, say,
+the employment permit salary thresholds is made once in `build_countries.py`.
+The nine hand-written country guides in the app take precedence over a generated
+one with the same slug.
+
 `build_content.py` strips the Google Docs CSS and classes, unwraps the
 `google.com/url` redirect links, maps document styles to `h2`/`h3`/`strong`, and
 cuts the preview at a block boundary near `PREVIEW_SHARE` (a long list or table can

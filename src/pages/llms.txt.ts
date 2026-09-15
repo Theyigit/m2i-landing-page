@@ -4,14 +4,14 @@
  * the full text is in /llms-full.txt.
  */
 import type { APIRoute } from 'astro';
-import { categories, articlePath, categoryPath, articleCount, generated } from '../lib/guides';
+import { categories, articlePath, categoryPath, guideCount, generated } from '../lib/guides';
 import { SITE_URL, SITE_NAME, APP_STORE_URL } from '../lib/site';
 
 export const GET: APIRoute = () => {
   const lines: string[] = [
     `# ${SITE_NAME}`,
     '',
-    `> Practical guides to relocating to Ireland (visas, permits, PPS number, renting, cost of living, tax, healthcare, schools, transport, pets), published from the Moving to Ireland iOS app. ${articleCount} guides, last refreshed ${generated}. The app turns the guides into a personal step-by-step checklist: ${APP_STORE_URL}`,
+    `> Practical guides to relocating to Ireland (visas, permits, PPS number, renting, cost of living, tax, healthcare, schools, transport, pets), published from the Moving to Ireland iOS app. ${guideCount} guides, last refreshed ${generated}. The app turns the guides into a personal step-by-step checklist: ${APP_STORE_URL}`,
     '',
     `Full text of every guide: ${SITE_URL}/llms-full.txt`,
     `Sitemap: ${SITE_URL}/sitemap-index.xml`,

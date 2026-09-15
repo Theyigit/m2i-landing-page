@@ -4,6 +4,7 @@
  */
 
 import data from '../data/guides.json' with { type: 'json' };
+import countryData from '../data/country-guides.json' with { type: 'json' };
 
 export interface Article {
   slug: string;
@@ -23,6 +24,16 @@ export interface Article {
   /** Whole article as plain text, for llms-full.txt. */
   plainText: string;
   sections: string[];
+  /**
+   * False for the generated country guides (scripts/build_countries.py), which
+   * are website-only: published in full, no app gate. Absent (true) for every
+   * guide that ships in the app.
+   */
+  inApp?: boolean;
+  /** Country guides only: region key and label for grouping on the hub. */
+  region?: string;
+  regionName?: string;
+  country?: string;
 }
 
 export interface Category {
@@ -37,7 +48,19 @@ export const generated: string = data.generated;
 export const previewShare: number = data.previewShare;
 export const articleCount: number = data.articleCount;
 export const wordCount: number = data.wordCount;
-export const categories: Category[] = data.categories as Category[];
+
+/** Website-only country guides, appended to the "Moving from" section. */
+export const countryGuides: Article[] = countryData.articles as Article[];
+export const countryGuidesGenerated: string = countryData.generated;
+export const REGIONS: Record<string, string> = countryData.regions;
+
+export const categories: Category[] = (data.categories as Category[]).map((c) =>
+  c.slug === 'moving-from' ? { ...c, articles: [...c.articles, ...countryGuides] } : c,
+);
+
+/** Every guide on the site, app guides plus country guides. */
+export const guideCount: number = articleCount + countryGuides.length;
+export const isInApp = (a: Article) => a.inApp !== false;
 
 export const categoryPath = (c: Category) => `/guides/${c.slug}/`;
 export const articlePath = (c: Category, a: Article) => `/guides/${c.slug}/${a.slug}/`;
@@ -66,7 +89,7 @@ export const CATEGORY_BLURBS: Record<string, string> = {
   'visas-and-permits':
     'Critical Skills and General Employment Permits, every immigration stamp, Stamp 4, citizenship by descent and IRP wait times.',
   'moving-from':
-    'Country-by-country guides: visas, licence exchange, tax treaties and the first 30 days for movers from the US, UK, India, Brazil and more.',
+    'Country-by-country guides for every major country: whether you need a visa, licence exchange, tax treaties, pensions, pets and the first 30 days.',
   'where-to-live':
     'The best areas of Dublin, Cork and Galway for families, professionals and commuters, with rents by district.',
   checklists: 'Everything in order: three months out, the week you land, and your first 90 days.',

@@ -5,14 +5,14 @@ import {
   categories,
   categoryPath,
   articlePath,
-  articleCount,
+  guideCount,
   CATEGORY_BLURBS,
   CATEGORY_ICONS,
 } from '../../lib/guides';
 import { SITE_NAME } from '../../lib/site';
 import { breadcrumbs, collectionPage, itemList } from '../../lib/schema';
 
-const title = `Moving to Ireland guides: ${articleCount} steps from visa to settled | ${SITE_NAME}`;
+const title = `Moving to Ireland guides: ${guideCount} steps from visa to settled | ${SITE_NAME}`;
 const description =
   'Practical guides to relocating to Ireland — visas and paperwork, renting a home, PPS number, healthcare, schools, transport, utilities and moving with pets — from the Moving to Ireland app.';
 
@@ -41,7 +41,7 @@ const structuredData = {
       </nav>
       <h1 class="mb-2.5 text-[clamp(25px,4.6vw,38px)]">Moving to Ireland guides</h1>
       <p class="max-w-[640px] text-[15px] text-white/85">
-        {articleCount} guides in the order a move actually happens: before you
+        {guideCount} guides in the order a move actually happens: before you
         leave, the paperwork that unlocks everything else, a home, and then the
         rest of daily life.
       </p>

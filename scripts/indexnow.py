@@ -10,8 +10,8 @@ deployed with the site, which is how IndexNow verifies ownership.
 
 import json
 import re
+import subprocess
 import sys
-import urllib.request
 from pathlib import Path
 
 SITE = "https://www.movingtoireland.co"
@@ -19,8 +19,8 @@ KEY = (Path(__file__).with_name("indexnow.key")).read_text().strip()
 
 
 def fetch(url: str) -> str:
-    with urllib.request.urlopen(url, timeout=30) as r:
-        return r.read().decode()
+    # curl rather than urllib: the python.org build has no CA bundle by default.
+    return subprocess.run(["curl", "-sSf", url], check=True, capture_output=True, text=True).stdout
 
 
 def sitemap_urls() -> list[str]:
@@ -36,9 +36,13 @@ def main() -> None:
     if len(sys.argv) > 1:
         urls = [u for u in urls if any(p in u for p in sys.argv[1:])]
     body = json.dumps({"host": "www.movingtoireland.co", "key": KEY, "keyLocation": f"{SITE}/{KEY}.txt", "urlList": urls}).encode()
-    req = urllib.request.Request("https://api.indexnow.org/indexnow", data=body, headers={"Content-Type": "application/json; charset=utf-8"})
-    with urllib.request.urlopen(req, timeout=30) as r:
-        print(f"IndexNow: HTTP {r.status} for {len(urls)} URLs")
+    status = subprocess.run(
+        ["curl", "-s", "-o", "/dev/null", "-w", "%{http_code}", "-X", "POST",
+         "-H", "Content-Type: application/json; charset=utf-8", "--data-binary", "@-",
+         "https://api.indexnow.org/indexnow"],
+        input=body, capture_output=True, check=True,
+    ).stdout.decode()
+    print(f"IndexNow: HTTP {status} for {len(urls)} URLs")
 
 
 if __name__ == "__main__":
