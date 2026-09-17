@@ -5,7 +5,7 @@
   "private": true,
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build",
+    "build": "astro build && node scripts/build-markdown.mjs dist https://www.movingtoireland.co",
     "preview": "astro preview",
     "content:build": "python3 scripts/build_content.py && python3 scripts/build_images.py && python3 scripts/build_social_proof.py"
   },
@@ -17,6 +17,8 @@
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.10",
+    "turndown": "^7.2.4",
+    "turndown-plugin-gfm": "^1.0.2",
     "typescript": "^5.9.3"
   },
   "overrides": {

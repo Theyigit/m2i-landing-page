@@ -11,6 +11,7 @@ export const GET: APIRoute = () => {
     `# ${SITE_NAME} — all guides`,
     '',
     `${guideCount} guides on moving to Ireland, last refreshed ${generated}. Source: ${SITE_URL}. The Moving to Ireland app (${APP_STORE_URL}) turns them into a personal checklist.`,
+    `Every page has a Markdown twin at the same URL with .md appended (e.g. ${SITE_URL}/index.md).`,
     '',
   ];
   for (const c of categories) {
