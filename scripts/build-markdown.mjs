@@ -17,7 +17,7 @@ const DIST = process.argv[2] || 'dist';
 const SITE = (process.env.SITE_URL || process.argv[3] || '').replace(/\/$/, '');
 
 const td = new TurndownService({ headingStyle: 'atx', codeBlockStyle: 'fenced', bulletListMarker: '-' });
-td.remove(['script', 'style', 'noscript', 'svg', 'form', 'button', 'iframe', 'nav', 'footer', 'header']);
+td.remove(['script', 'style', 'noscript', 'svg', 'form', 'button', 'iframe', 'nav', 'footer']);
 // Drop anything explicitly marked as chrome/interactive.
 td.addRule('skip-marked', {
   filter: (node) => node.nodeType === 1 && (
