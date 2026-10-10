@@ -1,0 +1,63 @@
+---
+import { BUNQ } from '../lib/site';
+
+interface Props {
+  /** Sent with the bunq_click event, e.g. "article-open-bank-account". */
+  placement: string;
+}
+
+const { placement } = Astro.props;
+---
+
+<!-- Affiliate partner. Brand rule from bunq: always write "bunq" in lowercase. -->
+<section class="hair hair-top rounded-[12px] bg-surface px-5 py-6 sm:px-7">
+  <p class="mb-1 text-[12px] font-extrabold uppercase tracking-[0.08em] text-accent-text">
+    Partner · Banking
+  </p>
+  <h2 class="mb-2 text-[21px] text-brand-dark">Need a bank account before your PPS number?</h2>
+  <p class="mb-4 text-[15px] leading-relaxed text-ink-soft">
+    Traditional Irish banks usually ask for a PPS number and proof of address. bunq is a
+    European digital bank you open from your phone, so you can get paid and pay rent from
+    your first week.
+  </p>
+
+  <ul class="mb-5 grid list-none gap-2 p-0">
+    {
+      BUNQ.points.map((point) => (
+        <li class="flex items-start gap-2 text-[14px] text-ink">
+          <svg
+            width="13"
+            height="13"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="3.5"
+            stroke-linecap="round"
+            class="mt-[3px] shrink-0 text-brand"
+            aria-hidden="true"
+          >
+            <path d="M20 6 9 17l-5-5" />
+          </svg>
+          {point}
+        </li>
+      ))
+    }
+  </ul>
+
+  <a
+    href={BUNQ.url}
+    target="_blank"
+    rel="sponsored noopener"
+    data-partner="bunq"
+    data-placement={placement}
+    class="inline-flex min-h-[48px] items-center rounded-[10px] bg-brand px-5 text-[15px] font-bold text-white no-underline transition hover:bg-brand-dark"
+  >
+    Open a bunq account <span class="ml-1.5" aria-hidden="true">→</span>
+  </a>
+
+  <p class="mt-4 text-[12px] leading-relaxed text-ink-faint">
+    We may earn a commission if you open an account through this link, at no cost to you.
+    Deposits at bunq are covered by the Dutch Deposit Guarantee Scheme. Check bunq's site for
+    current plans and fees.
+  </p>
+</section>

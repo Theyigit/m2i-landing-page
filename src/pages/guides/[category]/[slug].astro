@@ -3,6 +3,7 @@ import Base from '../../../layouts/Base.astro';
 import AppCTA from '../../../components/AppCTA.astro';
 import Paywall from '../../../components/Paywall.astro';
 import ArticleCard from '../../../components/ArticleCard.astro';
+import BunqCard from '../../../components/BunqCard.astro';
 import { categories, categoryPath, articlePath, generated, countryGuidesGenerated, isInApp, CATEGORY_TOPIC } from '../../../lib/guides';
 import type { Article, Category } from '../../../lib/guides';
 import { SITE_URL, SITE_NAME, ORG_ID, WEBSITE_ID, APP_STORE_URL } from '../../../lib/site';
@@ -50,6 +51,16 @@ const related = (
     : category.articles.filter((a) => a.slug !== article.slug)
 ).slice(0, 4);
 const featured = category.articles.filter((a) => isInApp(a) && a.slug !== article.slug).slice(0, 4);
+// Guides where a reader is sorting out banking: show the bunq partner card.
+const BUNQ_GUIDES = new Set([
+  'paperwork/open-bank-account',
+  'paperwork/your-1st-priority-apply-for-pps-number',
+  'pre-move/bringing-money-to-ireland',
+  'checklists/your-first-week-in-ireland',
+  'checklists/your-first-90-days-in-ireland',
+  'work-and-tax/salary-after-tax-in-ireland',
+]);
+const showBunq = BUNQ_GUIDES.has(`${category.slug}/${article.slug}`);
 const stepLabel = category.slug === 'moving-from' ? 'Country guide' : `Step ${index + 1} of ${category.articles.length}`;
 
 const structuredData = {
@@ -147,6 +158,14 @@ const structuredData = {
       )
     }
   </article>
+
+  {
+    showBunq && (
+      <section class="mx-auto max-w-[760px] px-4 pt-8 sm:px-6">
+        <BunqCard placement={`article-${article.slug}`} />
+      </section>
+    )
+  }
 
   <nav class="mx-auto mt-8 flex max-w-[760px] flex-wrap justify-between gap-3 px-4 sm:px-6" aria-label="Neighbouring guides">
     {

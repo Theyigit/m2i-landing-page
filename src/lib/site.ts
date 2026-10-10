@@ -29,6 +29,22 @@ export const SOCIAL = {
   twitter: 'https://twitter.com/MovingIreland',
 };
 
+/**
+ * Affiliate partners. Links carry the partner's tracking id, so always render
+ * them with rel="sponsored" and a data-placement for the click event.
+ */
+export const BUNQ = {
+  url: 'https://www.getbunq.app/4FG8SPG/225JFQ/?uid=2325',
+  /** From bunq's affiliate deck. Ask the bunq affiliate team before changing these claims. */
+  points: [
+    'Open an account in 5 minutes — no paperwork, no branch visit',
+    '90 days to give your tax ID, so you can start before your PPS number arrives',
+    'A free card straight away to settle in',
+    'Spend, receive and hold money in 22 currencies',
+    'App and support in English, and in your own language',
+  ],
+};
+
 export const NAV = [
   { href: '/guides/', label: 'Guides' },
   { href: '/guides/cost-of-living/', label: 'Cost of living' },
